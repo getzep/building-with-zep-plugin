@@ -1,0 +1,16 @@
+{
+  "name": "building-with-zep",
+  "owner": {
+    "name": "Zep"
+  },
+  "metadata": {
+    "description": "Build with Zep for Cursor. Import this repository as a Cursor team marketplace or install the plugin from this repo."
+  },
+  "plugins": [
+    {
+      "name": "building-with-zep",
+      "source": ".",
+      "description": "Skill plus the Zep documentation MCP server for building apps on Zep."
+    }
+  ]
+}

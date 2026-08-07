@@ -1,0 +1,50 @@
+name: Test Plugin
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Check manifests and MCP endpoints
+        run: |
+          python3 scripts/plugin_manifests.py --check
+          python3 scripts/validate_agent_plugin.py
+      - name: Require version bump for runtime changes
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          base="origin/${BASE_REF}"
+          changed=$(git diff --name-only "$base"...HEAD -- \
+            plugin.json \
+            mcp.json \
+            .claude-plugin/plugin.json \
+            .codex-plugin/plugin.json \
+            .cursor-plugin/plugin.json \
+            .cursor-plugin/mcp.json \
+            .mcp.json \
+            skills/)
+          if [ -z "$changed" ]; then
+            echo "No runtime changes; no version bump required."
+            exit 0
+          fi
+          new=$(python3 scripts/plugin_manifests.py version)
+          old=$(git show "$base:plugin.json" 2>/dev/null \
+            | python3 -c 'import json,sys; print(json.load(sys.stdin).get("version", ""))' \
+            || echo "")
+          if [ -z "$old" ]; then
+            echo "Initial plugin release; no prior version to compare."
+            exit 0
+          fi
+          python3 scripts/plugin_manifests.py require-newer "$new" "$old"
