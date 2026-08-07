@@ -45,7 +45,7 @@ vendor MCP schemas use different transport names:
 | `.mcp.json` | Claude Code, OpenAI Codex / ChatGPT Work | `{"type":"http","url":...}` |
 | `.cursor-plugin/mcp.json` | Cursor vendor wrapper | `{"url":...}` |
 
-Both point at `https://docs-mcp.getzep.com/mcp`. Change both together.
+All three point at `https://docs-mcp.getzep.com/mcp`. Change all three together.
 
 ## Repository contents
 
@@ -81,24 +81,22 @@ ln -s "$PWD" ~/.cursor/plugins/local/building-with-zep
 
 ## Releasing
 
-Merging to `main` updates the plugin source consumed by the marketplace. Keep
-the Agent Plugins manifest and all three vendor manifests on one version:
+Keep the Agent Plugins manifest and all three vendor manifests on one version:
 
 ```bash
 python3 scripts/plugin_manifests.py set <version>
 ```
 
-Then:
+Then changelog, validate (`claude plugin validate . --strict`,
+`python3 scripts/plugin_manifests.py --check`,
+`python3 scripts/validate_agent_plugin.py`), and merge a PR that passes
+`test-plugin.yml`.
 
-1. Add a `CHANGELOG.md` entry.
-2. Run `claude plugin validate . --strict`.
-3. Run `python3 scripts/plugin_manifests.py --check`.
-4. Run `python3 scripts/validate_agent_plugin.py`.
-5. Open the PR and confirm `test-plugin.yml` passes.
-
-There is no package-publish or tag step. Explicit semver is retained as a stable
-cross-ecosystem support identifier; CI flags loaded-content changes without a
-version increase.
+How that reaches Claude Code, Codex, and Cursor — Zep plugin marketplace today,
+Cursor team marketplace, and public directories later — is documented under
+**Releasing** in [`AGENTS.md`](AGENTS.md). CI requires a version bump when
+manifests, MCP configs, or `skills/` change; see that file for the exact path
+list.
 
 ## What goes in the skill vs. the docs
 
