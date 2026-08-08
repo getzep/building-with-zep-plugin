@@ -9,6 +9,15 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## Unreleased
+
+### Changed
+
+- Host Claude Code and Codex marketplaces in this repository with same-repo
+  plugin sources. Install with
+  `claude plugin marketplace add getzep/building-with-zep-plugin` then
+  `claude plugin install building-with-zep@building-with-zep`.
+
 ## 0.3.0 — 2026-08-07
 
 ### Added

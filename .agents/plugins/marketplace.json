@@ -1,15 +1,16 @@
 {
   "name": "building-with-zep",
   "owner": {
-    "name": "Zep"
-  },
-  "metadata": {
-    "description": "Cursor marketplace for the Build with Zep plugin. The plugin package lives in this same repository."
+    "name": "Zep",
+    "url": "https://www.getzep.com"
   },
   "plugins": [
     {
       "name": "building-with-zep",
-      "source": ".",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
       "description": "Skill plus the Zep documentation MCP server for building apps on Zep."
     }
   ]

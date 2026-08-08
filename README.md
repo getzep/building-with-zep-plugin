@@ -3,9 +3,9 @@
 The Build with Zep plugin helps Claude Code, Codex, and Cursor build applications
 with [Zep](https://www.getzep.com).
 
-This repository is the canonical source for the plugin. The shared Zep
-marketplace in [`getzep/zep`](https://github.com/getzep/zep) points here; no
-submodule or copied package is required.
+This repository is the canonical source for the plugin **and** its Claude Code,
+Codex, and Cursor marketplaces. Each marketplace catalog lists this package with
+a same-repo path source.
 
 ## User documentation
 
@@ -29,10 +29,14 @@ adopt the standard before installing the plugin:
 
 Every package path loads the same `skills/building-with-zep/` tree.
 
-Claude and ChatGPT Work/Codex marketplace entries live in `getzep/zep` and point
-at this GitHub repo with no duplicate version. Cursor catalogs only resolve
-same-repo plugin paths, so Cursor installs or team-imports **this** repository
-directly rather than via the shared `getzep/zep` Cursor catalog.
+Marketplace catalogs live in this repository:
+
+- Claude Code — `.claude-plugin/marketplace.json`
+- Codex / ChatGPT Work — `.agents/plugins/marketplace.json`
+- Cursor — `.cursor-plugin/marketplace.json`
+
+Each entry uses a same-repo path (`./` or `.`) so hosts do not clone a second
+remote for the plugin package.
 
 ## MCP configuration
 
@@ -55,6 +59,8 @@ All three point at `https://docs-mcp.getzep.com/mcp`. Change all three together.
 ├── mcp.json
 ├── skills/building-with-zep/SKILL.md
 ├── .claude-plugin/plugin.json
+├── .claude-plugin/marketplace.json
+├── .agents/plugins/marketplace.json
 ├── .codex-plugin/plugin.json
 ├── .cursor-plugin/plugin.json
 ├── .cursor-plugin/marketplace.json
@@ -87,13 +93,15 @@ Keep the Agent Plugins manifest and all three vendor manifests on one version:
 python3 scripts/plugin_manifests.py set <version>
 ```
 
-Then changelog, validate (`claude plugin validate . --strict`,
+Then changelog, validate the plugin and marketplace separately
+(`claude plugin validate .claude-plugin/plugin.json --strict`,
+`claude plugin validate . --strict`,
 `python3 scripts/plugin_manifests.py --check`,
 `python3 scripts/validate_agent_plugin.py`), and merge a PR that passes
 `test-plugin.yml`.
 
-How that reaches Claude Code, Codex, and Cursor — Zep plugin marketplace today,
-Cursor team marketplace, and public directories later — is documented under
+How that reaches Claude Code, Codex, and Cursor — this repository as marketplace
+today, Cursor team marketplace, and public directories later — is documented under
 **Releasing** in [`AGENTS.md`](AGENTS.md). CI requires a version bump when
 manifests, MCP configs, or `skills/` change; see that file for the exact path
 list.

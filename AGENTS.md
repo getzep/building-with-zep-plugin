@@ -29,8 +29,8 @@ loads the same `skills/building-with-zep/` tree.
   depend on Claude adopting the portable format.
 - Preserve `.codex-plugin/plugin.json` and `.mcp.json`; OpenAI support must not
   depend on OpenAI adopting the portable format.
-- Keep the entries in the Zep marketplace repository free of `version`. Each
-  ecosystem resolves the version from its own plugin manifest.
+- Keep marketplace catalog entries free of `version`. Each ecosystem resolves
+  the version from its own plugin manifest.
 - Preserve `.codex-plugin/plugin.json`; it is required for the Codex package.
 - Do not add `CLAUDE.md` at this plugin root. Claude's strict plugin validator
   rejects it because installed plugins load context from skills, not that file.
@@ -39,14 +39,15 @@ loads the same `skills/building-with-zep/` tree.
 The portable and ecosystem-specific files are:
 
 - Agent Plugins: `plugin.json`, `mcp.json`, and `skills/`.
-- Claude Code: `.claude-plugin/plugin.json` and `.mcp.json`.
-- OpenAI Codex / ChatGPT Work: `.codex-plugin/plugin.json` and `.mcp.json`.
+- Claude Code: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`,
+  and `.mcp.json`.
+- OpenAI Codex / ChatGPT Work: `.codex-plugin/plugin.json`,
+  `.agents/plugins/marketplace.json`, and `.mcp.json`.
 - Cursor: the portable Agent Plugins files plus `.cursor-plugin/plugin.json`,
-  `.cursor-plugin/mcp.json`, and `.cursor-plugin/marketplace.json` for the
-  vendor marketplace path.
-- Claude / ChatGPT Work marketplace catalogs remain in `getzep/zep` and point at
-  this repo. Cursor catalogs only resolve same-repo paths, so Cursor installs or
-  team-imports this repository directly.
+  `.cursor-plugin/mcp.json`, and `.cursor-plugin/marketplace.json`.
+- This repository hosts its own marketplace catalogs. Plugin `source` entries
+  must stay same-repo paths (`./` or `.`). Do not switch them to remote
+  `github` / `url` sources.
 
 ## MCP configuration
 
@@ -78,16 +79,19 @@ For loaded plugin content changes:
    ```
 
 2. Add an entry to `CHANGELOG.md`.
-3. Validate the Claude package:
+3. Validate the Claude plugin package and the marketplace catalog separately.
+   With both files under `.claude-plugin/`, `claude plugin validate .` only
+   checks the marketplace:
 
    ```bash
+   claude plugin validate .claude-plugin/plugin.json --strict
    claude plugin validate . --strict
    ```
 
 4. Run the repository plugin-manifest check and confirm the `test-plugin.yml`
    workflow passes in the pull request. The workflow also runs
    `scripts/validate_agent_plugin.py` against the portable manifest and MCP
-   configuration.
+   configuration, and checks marketplace catalogs for same-repo sources.
 5. Open a PR and merge to the default branch.
 
 There is no npm publish, GitHub Release, or required git tag for this package.
@@ -122,34 +126,41 @@ This repository is the source of truth. Channels differ in what happens after
 merge. User-facing install and update steps live in
 [Implement Zep with agents](https://help.getzep.com/implement-zep-with-agents).
 
-#### Zep plugin marketplace (`getzep/zep`) — primary today
+#### This repository as marketplace — primary today
 
-Not Anthropic's, OpenAI's, or Cursor's official public directories. The shared
-catalog in [`getzep/zep`](https://github.com/getzep/zep) lists
-`building-with-zep` for Claude Code and Codex and points at this repository (no
-submodule or copied package). Marketplace entries must stay free of `version`;
-each host resolves the release from this package's manifests. Changing that
-catalog entry or source ref is a separate change in `getzep/zep` only when the
-pointer itself needs updating — not on every plugin release.
+Not Anthropic's, OpenAI's, or Cursor's official public directories. Users add
+**this** GitHub repository as the marketplace, then install the same-repo
+plugin. Marketplace entries must stay free of `version`; each host resolves the
+release from this package's manifests. Ordinary plugin releases do not need a
+separate marketplace PR elsewhere.
+
+```bash
+claude plugin marketplace add getzep/building-with-zep-plugin
+claude plugin install building-with-zep@building-with-zep
+```
+
+```bash
+codex plugin marketplace add getzep/building-with-zep-plugin
+codex plugin add building-with-zep@building-with-zep
+```
 
 After the package is on `main`:
 
-- **Claude Code:** users with the `zep` marketplace refresh and update
-  (`claude plugin marketplace update zep` then
-  `claude plugin update building-with-zep@zep`), or enable marketplace
-  auto-update (off by default for third-party marketplaces). Administrators can
-  set `"autoUpdate": true` on the marketplace's
+- **Claude Code:** users with the `building-with-zep` marketplace refresh and
+  update (`claude plugin marketplace update building-with-zep` then
+  `claude plugin update building-with-zep@building-with-zep`), or enable
+  marketplace auto-update (off by default for third-party marketplaces).
+  Administrators can set `"autoUpdate": true` on the marketplace's
   [`extraKnownMarketplaces`](https://code.claude.com/docs/en/settings#extraknownmarketplaces)
   entry. Because this package sets an explicit `version`, bump it or Claude Code
   will keep the cached release.
 - **Codex:** refreshes configured git marketplaces on startup. Immediate pull:
-  `codex plugin marketplace upgrade zep`, then start a new session.
+  `codex plugin marketplace upgrade building-with-zep`, then start a new
+  session.
 - **Cursor `/add-plugin` from a GitHub URL:** currently pins the install to the
   commit used at install time; re-run / Update / Reinstall does not advance past
   that snapshot. Prefer a Cursor team marketplace import of **this** repo (below)
-  when you need refreshable team distribution. Cursor catalogs only resolve
-  same-repo plugin paths, so do not rely on the shared `getzep/zep` Cursor
-  catalog for long-term distribution of this package.
+  when you need refreshable team distribution.
 
 #### Claude Code community marketplace (later / optional)
 

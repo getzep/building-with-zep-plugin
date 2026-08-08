@@ -53,7 +53,7 @@ PLUGINS: list[PluginSpec] = [
             (".cursor-plugin/mcp.json", "Cursor vendor MCP"),
         ],
         mcp_server_name="zep-docs",
-        validate_path=".",
+        validate_path=".claude-plugin/plugin.json",
     ),
 ]
 PLUGINS_BY_NAME = {plugin.name: plugin for plugin in PLUGINS}
@@ -61,7 +61,35 @@ DEFAULT_PLUGIN = PLUGINS[0]
 
 # Places a version must never appear. Each ecosystem resolves the release version
 # from its plugin.json; a second marketplace value is redundant and can drift.
-FORBIDDEN_SITES: list[tuple[str, str, str]] = []
+FORBIDDEN_SITES: list[tuple[str, str, str]] = [
+    (
+        ".claude-plugin/marketplace.json",
+        "entry",
+        "marketplace entries must not declare version",
+    ),
+    (
+        ".agents/plugins/marketplace.json",
+        "entry",
+        "marketplace entries must not declare version",
+    ),
+    (
+        ".cursor-plugin/marketplace.json",
+        "entry",
+        "marketplace entries must not declare version",
+    ),
+]
+
+# Same-repo marketplace catalogs. Claude Code's remote github plugin source
+# requires a second clone; keep sources local to this repository.
+MARKETPLACE_SITES: list[tuple[str, str, object]] = [
+    (".claude-plugin/marketplace.json", "building-with-zep", "./"),
+    (
+        ".agents/plugins/marketplace.json",
+        "building-with-zep",
+        {"source": "local", "path": "./"},
+    ),
+    (".cursor-plugin/marketplace.json", "building-with-zep", "."),
+]
 
 
 class SiteError(Exception):
@@ -219,6 +247,38 @@ def check_plugin(plugin: PluginSpec, problems: list[str]) -> None:
         )
 
 
+def _source_matches(actual: object, expected: object) -> bool:
+    return actual == expected
+
+
+def check_marketplaces(problems: list[str]) -> None:
+    """Require marketplace catalogs to name this plugin with a same-repo source."""
+    for rel_path, plugin_name, expected_source in MARKETPLACE_SITES:
+        try:
+            _, _, data = _load(rel_path)
+            entries = _marketplace_entries(rel_path, data)
+        except SiteError as exc:
+            problems.append(str(exc))
+            continue
+        if not isinstance(data, dict) or data.get("name") != plugin_name:
+            problems.append(
+                f"{rel_path}: marketplace name must be {plugin_name!r}"
+            )
+        matches = [e for e in entries if e.get("name") == plugin_name]
+        if len(matches) != 1:
+            problems.append(
+                f"{rel_path}: expected exactly one plugins[] entry named "
+                f"{plugin_name!r}, found {len(matches)}"
+            )
+            continue
+        source = matches[0].get("source")
+        if not _source_matches(source, expected_source):
+            problems.append(
+                f"{rel_path}: plugins[{plugin_name}].source must be "
+                f"{expected_source!r}, got {source!r}"
+            )
+
+
 def check() -> int:
     """Report the managed values; fail on drift, a missing site, or a stray version."""
     problems: list[str] = []
@@ -226,6 +286,8 @@ def check() -> int:
     for plugin in PLUGINS:
         check_plugin(plugin, problems)
         print()
+
+    check_marketplaces(problems)
 
     for rel_path, kind, why in FORBIDDEN_SITES:
         try:
@@ -322,7 +384,8 @@ def set_version(plugin: PluginSpec, new_version: str) -> int:
     print(f"\nBumped {plugin.name} to {new_version}. Next:")
     print("  1. add a CHANGELOG.md entry describing what users get")
     print(f"  2. claude plugin validate {plugin.validate_path} --strict")
-    print("  3. open the PR — merging it is the release; plugins are not tagged")
+    print("  3. claude plugin validate . --strict  # marketplace catalog")
+    print("  4. open the PR — merging it is the release; plugins are not tagged")
     return 0
 
 
