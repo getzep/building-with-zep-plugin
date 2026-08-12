@@ -1,6 +1,6 @@
 {
   "name": "building-with-zep",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Build and configure applications that use Zep — agent memory built on temporal Context Graphs. Bundles the building-with-zep skill (how to reason about and build on Zep) and the Zep documentation MCP server (real-time docs search).",
   "author": {
     "name": "Zep",
