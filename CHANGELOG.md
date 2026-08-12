@@ -11,12 +11,19 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+## 0.4.0 — 2026-08-12
+
 ### Changed
 
 - Host Claude Code and Codex marketplaces in this repository with same-repo
   plugin sources. Install with
   `claude plugin marketplace add getzep/building-with-zep-plugin` then
   `claude plugin install building-with-zep@building-with-zep`.
+- Update the `building-with-zep` skill ingestion guidance: document
+  `zep-ingest` and when to use it vs. `thread.add_messages` / `graph.add`,
+  point agents at [Create an ingestion pipeline](https://help.getzep.com/zep-ingest)
+  and [Prepare data for ingestion](https://help.getzep.com/prepare-data-for-ingestion),
+  and remove the retired JSON best-practices page.
 
 ## 0.3.0 — 2026-08-07
 
