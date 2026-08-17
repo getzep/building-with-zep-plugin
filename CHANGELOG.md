@@ -11,6 +11,8 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+- Link Zep’s privacy policy and terms of service from `README.md`.
+
 ## 0.4.1 — 2026-08-17
 
 ### Added

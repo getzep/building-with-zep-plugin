@@ -29,6 +29,18 @@ API key, plugin variables, or other secrets. A Zep API key is only needed later,
 in *your* application, when you call the Zep product APIs — not to use this
 plugin.
 
+## Legal
+
+This plugin is published by [Zep](https://www.getzep.com) under the
+[Apache License 2.0](LICENSE). Using the plugin is also subject to Zep’s:
+
+- [Privacy Policy](https://www.getzep.com/legal/privacy/)
+- [Terms of Service](https://www.getzep.com/legal/terms/)
+
+The plugin itself is a skill plus a public documentation MCP server. It does not
+require a Zep account or API key. If you later use Zep’s product APIs in your
+own application, those APIs are covered by the same terms and privacy policy.
+
 ## Portable core plus vendor compatibility
 
 The repository root conforms to
