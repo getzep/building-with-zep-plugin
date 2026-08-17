@@ -11,6 +11,14 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+## 0.4.1 — 2026-08-17
+
+### Added
+
+- Commit the Zep icon at `assets/logo.png` and reference it from the Cursor
+  plugin and marketplace manifests.
+- Document plugin usage and configuration in `README.md`.
+
 ## 0.4.0 — 2026-08-12
 
 ### Changed
