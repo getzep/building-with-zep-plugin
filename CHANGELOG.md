@@ -9,30 +9,26 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
-## Unreleased
-
-### Changed
-
-- Rewrite the plugin Legal section as formal Terms of Service and Privacy
-  Policy copy (Apache-2.0 still governs the plugin files; product terms still
-  apply only if you later use the Zep Service).
-- Move those terms and the privacy policy into `legal/TERMS.md` and
-  `legal/PRIVACY.md`, linked from the README. Remove the statement that Zep
-  does not use Plugin information to train models.
-
 ## 0.4.2 — 2026-08-18
 
 ### Added
 
 - Document plugin-specific terms (Apache-2.0) and privacy (docs MCP only;
-  not Zep Memory) in `README.md`. Product privacy/terms apply only if you
-  later use Zep’s APIs.
+  not Zep Memory) in `legal/TERMS.md` and `legal/PRIVACY.md`, linked from
+  the README. Product privacy/terms apply only if you later use Zep’s APIs.
+- Point plugin support to `support@getzep.com` in the README.
 
 ### Changed
 
 - Drop the Cursor vendor plugin wrapper (`.cursor-plugin/plugin.json` and
   `.cursor-plugin/mcp.json`). Cursor loads the Agent Plugins package. The
   Cursor marketplace catalog stays and still points at this repo root.
+- Rewrite the plugin Legal section as formal Terms of Service and Privacy
+  Policy copy (Apache-2.0 still governs the plugin files; product terms still
+  apply only if you later use the Zep Service).
+- Move those terms and the privacy policy into `legal/TERMS.md` and
+  `legal/PRIVACY.md`. Remove the statement that Zep does not use Plugin
+  information to train models.
 
 ## 0.4.1 — 2026-08-17
 
