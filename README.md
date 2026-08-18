@@ -31,15 +31,22 @@ plugin.
 
 ## Legal
 
-This plugin is published by [Zep](https://www.getzep.com) under the
-[Apache License 2.0](LICENSE). Using the plugin is also subject to Zep’s:
+**Terms.** This plugin is licensed under the [Apache License 2.0](LICENSE).
+That license is the terms for installing and using the plugin (the skill,
+manifests, and MCP config).
 
-- [Privacy Policy](https://www.getzep.com/legal/privacy/)
-- [Terms of Service](https://www.getzep.com/legal/terms/)
+**Privacy.** This plugin is not Zep Memory. It does not create a Zep account,
+accept an API key, or store user, graph, or memory data in Zep. The skill is a
+local file. The only network call is to Zep’s public documentation MCP at
+`https://docs-mcp.getzep.com/mcp` (search and page reads, no API key). Using
+that server sends the documentation query or page request to Zep so it can
+return public docs. Those requests are not used to build a user memory graph.
+The docs host may process ordinary request metadata needed to serve the
+connection (for example an IP address). This plugin does not sell plugin data.
 
-The plugin itself is a skill plus a public documentation MCP server. It does not
-require a Zep account or API key. If you later use Zep’s product APIs in your
-own application, those APIs are covered by the same terms and privacy policy.
+**Zep product.** If you later use Zep’s product APIs in your own application,
+that use is covered by Zep’s [Privacy Policy](https://www.getzep.com/legal/privacy/)
+and [Terms of Service](https://www.getzep.com/legal/terms/).
 
 ## Portable core plus vendor compatibility
 

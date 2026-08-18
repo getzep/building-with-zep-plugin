@@ -11,7 +11,9 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
-- Link Zep’s privacy policy and terms of service from `README.md`.
+- Document plugin-specific terms (Apache-2.0) and privacy (docs MCP only;
+  not Zep Memory) in `README.md`. Product privacy/terms apply only if you
+  later use Zep’s APIs.
 
 ## 0.4.1 — 2026-08-17
 
