@@ -16,6 +16,9 @@ Claude Code also uses it for update detection. Bump it with
 - Rewrite the plugin Legal section as formal Terms of Service and Privacy
   Policy copy (Apache-2.0 still governs the plugin files; product terms still
   apply only if you later use the Zep Service).
+- Move those terms and the privacy policy into `legal/TERMS.md` and
+  `legal/PRIVACY.md`, linked from the README. Remove the statement that Zep
+  does not use Plugin information to train models.
 
 ## 0.4.2 — 2026-08-18
 
