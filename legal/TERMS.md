@@ -46,7 +46,3 @@ of the revised Terms.
 **7. Privacy.** Zep's collection, use, and disclosure of information in
 connection with the Plugin is described in the
 [Plugin Privacy Policy](PRIVACY.md).
-
-**8. Support.** For technical support related to the Plugin, contact
-[support@getzep.com](mailto:support@getzep.com) or open an issue on the
-[plugin repository](https://github.com/getzep/building-with-zep-plugin).

@@ -16,7 +16,7 @@ Claude Code also uses it for update detection. Bump it with
 - Document plugin-specific terms (Apache-2.0) and privacy (docs MCP only;
   not Zep Memory) in `legal/TERMS.md` and `legal/PRIVACY.md`, linked from
   the README. Product privacy/terms apply only if you later use Zep’s APIs.
-- Point plugin support to `support@getzep.com`.
+- Point plugin support to `support@getzep.com` in the README.
 
 ### Changed
 
