@@ -11,6 +11,12 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+### Changed
+
+- Rewrite the plugin Legal section as formal Terms of Service and Privacy
+  Policy copy (Apache-2.0 still governs the plugin files; product terms still
+  apply only if you later use the Zep Service).
+
 ## 0.4.2 — 2026-08-18
 
 ### Added
