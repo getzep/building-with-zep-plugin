@@ -43,6 +43,9 @@ If you later access or use the Zep Service, including Zep's APIs, that use is
 governed by Zep's [Terms of Service](https://www.getzep.com/legal/terms/) and
 [Privacy Policy](https://www.getzep.com/legal/privacy/).
 
+For technical support, email [support@getzep.com](mailto:support@getzep.com)
+or open an issue on this repository.
+
 ## Portable core plus vendor compatibility
 
 The repository root conforms to
