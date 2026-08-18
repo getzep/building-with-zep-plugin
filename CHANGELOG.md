@@ -13,6 +13,12 @@ Claude Code also uses it for update detection. Bump it with
 
 ## 0.4.2 — 2026-08-18
 
+### Added
+
+- Document plugin-specific terms (Apache-2.0) and privacy (docs MCP only;
+  not Zep Memory) in `README.md`. Product privacy/terms apply only if you
+  later use Zep’s APIs.
+
 ### Changed
 
 - Drop the Cursor vendor plugin wrapper (`.cursor-plugin/plugin.json` and
