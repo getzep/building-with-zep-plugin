@@ -41,4 +41,4 @@ age of 13, and Zep does not knowingly collect personal information from
 children under 13 through the Plugin.
 
 **6. Contact.** Questions regarding this Privacy Policy may be sent to
-support@getzep.com.
+info@getzep.com.
