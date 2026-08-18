@@ -7,10 +7,46 @@ This repository is the canonical source for the plugin **and** its Claude Code,
 Codex, and Cursor marketplaces. Each marketplace catalog lists this package with
 a same-repo path source.
 
-## User documentation
+## Usage
 
-For installation, usage, supported agents, and an overview, see
-[Implement Zep with agents](https://help.getzep.com/implement-zep-with-agents).
+Install from [Implement Zep with agents](https://help.getzep.com/implement-zep-with-agents).
+That page covers Claude Code, Codex, and Cursor.
+
+Once installed, the plugin gives the agent:
+
+- The **`building-with-zep` skill** — how to scope graphs, ingest data, retrieve
+  context, and evaluate a Zep integration
+- The **`zep-docs` MCP server** — live Zep documentation at
+  `https://docs-mcp.getzep.com/mcp` (search and full-page reads)
+
+Ask the agent to design, review, or debug a Zep integration. It should use the
+skill for decision rules and `zep-docs` for current API details.
+
+### Configuration
+
+None required. `zep-docs` is a public remote MCP server. It does not need an
+API key, plugin variables, or other secrets. A Zep API key is only needed later,
+in *your* application, when you call the Zep product APIs — not to use this
+plugin.
+
+## Legal
+
+**Terms.** This plugin is licensed under the [Apache License 2.0](LICENSE).
+That license is the terms for installing and using the plugin (the skill,
+manifests, and MCP config).
+
+**Privacy.** This plugin is not Zep Memory. It does not create a Zep account,
+accept an API key, or store user, graph, or memory data in Zep. The skill is a
+local file. The only network call is to Zep’s public documentation MCP at
+`https://docs-mcp.getzep.com/mcp` (search and page reads, no API key). Using
+that server sends the documentation query or page request to Zep so it can
+return public docs. Those requests are not used to build a user memory graph.
+The docs host may process ordinary request metadata needed to serve the
+connection (for example an IP address). This plugin does not sell plugin data.
+
+**Zep product.** If you later use Zep’s product APIs in your own application,
+that use is covered by Zep’s [Privacy Policy](https://www.getzep.com/legal/privacy/)
+and [Terms of Service](https://www.getzep.com/legal/terms/).
 
 ## Portable core plus vendor compatibility
 
@@ -57,6 +93,7 @@ All three point at `https://docs-mcp.getzep.com/mcp`. Change all three together.
 .
 ├── plugin.json
 ├── mcp.json
+├── assets/logo.png
 ├── skills/building-with-zep/SKILL.md
 ├── .claude-plugin/plugin.json
 ├── .claude-plugin/marketplace.json

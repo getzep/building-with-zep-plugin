@@ -10,7 +10,8 @@
     {
       "name": "building-with-zep",
       "source": ".",
-      "description": "Skill plus the Zep documentation MCP server for building apps on Zep."
+      "description": "Skill plus the Zep documentation MCP server for building apps on Zep.",
+      "logo": "assets/logo.png"
     }
   ]
 }
