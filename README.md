@@ -60,8 +60,8 @@ adopt the standard before installing the plugin:
 
 - **Claude Code** — `.claude-plugin/plugin.json` and Claude-shaped `.mcp.json`
 - **OpenAI Codex / ChatGPT Work** — `.codex-plugin/plugin.json` and `.mcp.json`
-- **Cursor** — natively loads the Agent Plugins package; `.cursor-plugin/`
-  remains for Cursor marketplace metadata and team marketplace import
+- **Cursor** — loads the Agent Plugins package; `.cursor-plugin/marketplace.json`
+  is the Cursor marketplace catalog and points at this repo root (`.`)
 
 Every package path loads the same `skills/building-with-zep/` tree.
 
@@ -76,16 +76,15 @@ remote for the plugin package.
 
 ## MCP configuration
 
-`zep-docs` is declared in three schema-specific files because the portable and
+`zep-docs` is declared in two schema-specific files because the portable and
 vendor MCP schemas use different transport names:
 
 | File | Read by | Shape |
 |---|---|---|
-| `mcp.json` | Agent Plugins clients | `{"type":"streamable-http","url":...}` plus the 1.0.0 schema |
+| `mcp.json` | Agent Plugins clients, including Cursor | `{"type":"streamable-http","url":...}` plus the 1.0.0 schema |
 | `.mcp.json` | Claude Code, OpenAI Codex / ChatGPT Work | `{"type":"http","url":...}` |
-| `.cursor-plugin/mcp.json` | Cursor vendor wrapper | `{"url":...}` |
 
-All three point at `https://docs-mcp.getzep.com/mcp`. Change all three together.
+Both point at `https://docs-mcp.getzep.com/mcp`. Change both together.
 
 ## Repository contents
 
@@ -99,9 +98,7 @@ All three point at `https://docs-mcp.getzep.com/mcp`. Change all three together.
 ├── .claude-plugin/marketplace.json
 ├── .agents/plugins/marketplace.json
 ├── .codex-plugin/plugin.json
-├── .cursor-plugin/plugin.json
 ├── .cursor-plugin/marketplace.json
-├── .cursor-plugin/mcp.json
 ├── .mcp.json
 ├── scripts/plugin_manifests.py
 ├── scripts/validate_agent_plugin.py
@@ -124,7 +121,7 @@ ln -s "$PWD" ~/.cursor/plugins/local/building-with-zep
 
 ## Releasing
 
-Keep the Agent Plugins manifest and all three vendor manifests on one version:
+Keep the Agent Plugins manifest and the Claude and Codex vendor manifests on one version:
 
 ```bash
 python3 scripts/plugin_manifests.py set <version>

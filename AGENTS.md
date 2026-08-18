@@ -23,7 +23,6 @@ loads the same `skills/building-with-zep/` tree.
   - `plugin.json`
   - `.claude-plugin/plugin.json`
   - `.codex-plugin/plugin.json`
-  - `.cursor-plugin/plugin.json`
 - Keep root `plugin.json` and `mcp.json` conformant to Agent Plugins 1.0.0.
 - Preserve `.claude-plugin/plugin.json` and `.mcp.json`; Claude support must not
   depend on Claude adopting the portable format.
@@ -43,25 +42,24 @@ The portable and ecosystem-specific files are:
   and `.mcp.json`.
 - OpenAI Codex / ChatGPT Work: `.codex-plugin/plugin.json`,
   `.agents/plugins/marketplace.json`, and `.mcp.json`.
-- Cursor: the portable Agent Plugins files plus `.cursor-plugin/plugin.json`,
-  `.cursor-plugin/mcp.json`, and `.cursor-plugin/marketplace.json`.
+- Cursor: the portable Agent Plugins files. `.cursor-plugin/marketplace.json`
+  is the Cursor marketplace catalog and points at this repo root (`.`).
 - This repository hosts its own marketplace catalogs. Plugin `source` entries
   must stay same-repo paths (`./` or `.`). Do not switch them to remote
   `github` / `url` sources.
 
 ## MCP configuration
 
-The `zep-docs` server is intentionally declared in three schema-specific files:
+The `zep-docs` server is intentionally declared in two schema-specific files:
 
 - `mcp.json` is the Agent Plugins 1.0.0 configuration. Its server entry contains
-  `{"type":"streamable-http","url":...}` and the canonical `$schema`.
+  `{"type":"streamable-http","url":...}` and the canonical `$schema`. Cursor
+  loads this file with the portable package.
 - `.mcp.json` is read by Claude Code and OpenAI. Its server entry contains
   `{"type":"http","url":...}`.
-- `.cursor-plugin/mcp.json` is read by the Cursor vendor wrapper and uses
-  Cursor's URL-inferred transport shape.
 
-All three files must point to `https://docs-mcp.getzep.com/mcp`. Whenever one
-endpoint changes, update the others in the same change. Do not consolidate the
+Both files must point to `https://docs-mcp.getzep.com/mcp`. Whenever one
+endpoint changes, update the other in the same change. Do not consolidate the
 files unless each affected vendor documents the portable schema as supported.
 
 ## Releasing
@@ -109,9 +107,7 @@ Changes limited to the maintainer-only `README.md`, `CHANGELOG.md`, or
 covers these loaded-content paths — not every non-docs file in the repo:
 
 - `plugin.json`, `mcp.json`, `.mcp.json`
-- `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`,
-  `.cursor-plugin/plugin.json`
-- `.cursor-plugin/mcp.json`
+- `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`
 - `skills/`
 
 Paths outside that list (for example `.cursor-plugin/marketplace.json` or

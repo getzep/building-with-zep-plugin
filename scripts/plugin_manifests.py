@@ -45,12 +45,10 @@ PLUGINS: list[PluginSpec] = [
             ("plugin.json", "manifest", "Agent Plugins manifest"),
             (".claude-plugin/plugin.json", "manifest", "Claude plugin manifest"),
             (".codex-plugin/plugin.json", "manifest", "Codex plugin manifest"),
-            (".cursor-plugin/plugin.json", "manifest", "Cursor plugin manifest"),
         ],
         mcp_sites=[
             (".mcp.json", "Claude + Codex (.mcp.json)"),
             ("mcp.json", "Agent Plugins (mcp.json)"),
-            (".cursor-plugin/mcp.json", "Cursor vendor MCP"),
         ],
         mcp_server_name="zep-docs",
         validate_path=".claude-plugin/plugin.json",
