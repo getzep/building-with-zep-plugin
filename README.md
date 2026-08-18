@@ -31,87 +31,17 @@ plugin.
 
 ## Legal
 
-These disclosures are the terms of service and privacy policy relating to the
-Build with Zep plugin (the "**Plugin**"), made available by Zep Software, Inc.
-("**Zep**," "**we**," or "**us**"). They apply to installation and use of the
-Plugin. They do **not** govern access to or use of Zep's commercial memory and
-context-engineering platform (the "**Zep Service**").
+The following documents are the terms of service and privacy policy relating
+to the Build with Zep plugin (the "**Plugin**"). They apply to installation
+and use of the Plugin. They do **not** govern access to or use of Zep's
+commercial memory and context-engineering platform (the "**Zep Service**").
 
-### Terms of Service
+- [Plugin Terms of Service](legal/TERMS.md)
+- [Plugin Privacy Policy](legal/PRIVACY.md)
 
-**Last updated:** August 18, 2026
-
-**1. Acceptance.** By installing, accessing, or using the Plugin, you agree to
-these Terms of Service. If you do not agree, do not install or use the Plugin.
-
-**2. License.** The Plugin, including without limitation the skill, manifests,
-marketplace catalogs, and MCP configuration, is licensed under the
-[Apache License, Version 2.0](LICENSE) (the "**License**"). The License is the
-agreement that governs your rights to use, reproduce, modify, and distribute
-the Plugin. Nothing in these Terms of Service grants rights beyond those set
-forth in the License.
-
-**3. Nature of the Plugin.** The Plugin consists of (a) locally installed
-guidance for building applications with Zep, and (b) configuration that permits
-your agent environment to query Zep's publicly available documentation server
-at `https://docs-mcp.getzep.com/mcp`. The Plugin does not provide access to the
-Zep Service, does not issue or accept API keys, does not create a Zep account,
-and does not store user, graph, or memory data in the Zep Service.
-
-**4. Relationship to the Zep Service.** Installation of the Plugin does not
-constitute an account for, or a subscription to, the Zep Service. If you later
-access or use the Zep Service (including Zep's APIs) in your own application,
-that use is governed by Zep's [Terms of Service](https://www.getzep.com/legal/terms/)
-and [Privacy Policy](https://www.getzep.com/legal/privacy/), and not by these
-Plugin terms.
-
-**5. Disclaimer of warranties; limitation of liability.** THE PLUGIN IS
-PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. Warranty disclaimers and
-limitations of liability applicable to the Plugin are as set forth in the
-License.
-
-**6. Changes.** Zep may revise these Plugin terms by updating this section.
-Your continued use of the Plugin following such an update constitutes
-acceptance of the revised terms.
-
-### Privacy Policy
-
-**Last updated:** August 18, 2026
-
-This Privacy Policy describes Zep's collection, use, and disclosure of
-information in connection with the Plugin. It applies solely to the Plugin.
-If you use the Zep Service, Zep's [Privacy Policy](https://www.getzep.com/legal/privacy/)
-governs that use.
-
-**1. No account or memory data.** Use of the Plugin does not require a Zep
-account, API key, or other credentials. The Plugin is not Zep Memory and does
-not create, store, or update user, graph, or memory data in the Zep Service.
-
-**2. Information processed through the documentation MCP.** The Plugin skill is
-a local file. The only network communication initiated by the Plugin is to
-Zep's public documentation MCP server at `https://docs-mcp.getzep.com/mcp`, for
-the purpose of searching and retrieving publicly available documentation. When
-your agent environment submits a documentation query or page request, Zep
-receives that request and ordinary technical information reasonably necessary
-to provide, secure, and operate the connection (which may include Internet
-Protocol address, timestamps, and standard request headers). Zep uses this
-information solely to operate, secure, and improve the documentation service.
-
-**3. Use limitations.** Documentation requests made through the Plugin are not
-used to build, update, or personalize a user memory graph. Zep does not sell
-information received through the Plugin. Zep does not use information received
-through the Plugin to train artificial intelligence or machine learning models.
-
-**4. Third-party hosts.** The Plugin runs inside a third-party agent host.
-Information collected by that host is governed by that host's own terms and
-privacy policy, not this Privacy Policy.
-
-**5. Children's privacy.** The Plugin is not directed to children under the
-age of 13, and Zep does not knowingly collect personal information from
-children under 13 through the Plugin.
-
-**6. Contact.** Questions regarding this Privacy Policy may be sent to
-info@getzep.com.
+If you later access or use the Zep Service, including Zep's APIs, that use is
+governed by Zep's [Terms of Service](https://www.getzep.com/legal/terms/) and
+[Privacy Policy](https://www.getzep.com/legal/privacy/).
 
 ## Portable core plus vendor compatibility
 
@@ -167,6 +97,8 @@ Both point at `https://docs-mcp.getzep.com/mcp`. Change both together.
 ├── .mcp.json
 ├── scripts/plugin_manifests.py
 ├── scripts/validate_agent_plugin.py
+├── legal/TERMS.md
+├── legal/PRIVACY.md
 ├── AGENTS.md
 ├── CHANGELOG.md
 └── README.md
