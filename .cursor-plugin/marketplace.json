@@ -10,7 +10,7 @@
     {
       "name": "building-with-zep",
       "source": ".",
-      "description": "Skill plus the Zep documentation MCP server for building apps on Zep.",
+      "description": "Build and configure applications that use Zep — agent memory built on temporal Context Graphs. Bundles the building-with-zep skill and the Zep documentation MCP server.",
       "logo": "assets/logo.png"
     }
   ]
