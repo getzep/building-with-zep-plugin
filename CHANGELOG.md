@@ -9,6 +9,13 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## Unreleased
+
+### Changed
+
+- Make `assets/logo.png` exactly square (704×704) so it meets Cursor
+  Marketplace’s 1:1 logo requirement.
+
 ## 0.4.2 — 2026-08-18
 
 ### Added
