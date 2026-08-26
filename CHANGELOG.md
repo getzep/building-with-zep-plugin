@@ -11,10 +11,17 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+## 0.4.3 — 2026-08-26
+
 ### Changed
 
 - Make `assets/logo.png` exactly square (704×704) so it meets Cursor
   Marketplace’s 1:1 logo requirement.
+- Document multi-graph backfill guidance in the building-with-zep skill:
+  submit all episodes to all graphs without waiting for processing between
+  graphs or sources, and poll only once on the last episode when retrievability
+  matters (applies to `thread.add_messages`, `graph.add`, batch, and
+  `zep-ingest` alike).
 
 ## 0.4.2 — 2026-08-18
 
