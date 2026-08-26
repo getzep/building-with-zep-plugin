@@ -126,6 +126,10 @@ claims) — good retrieval draws on both. See
   retrievable (seconds or more). Design for eventual availability rather than
   reading back immediately; check status when it matters via
   [Check ingestion status](https://help.getzep.com/check-data-ingestion-status).
+  **Submit all episodes without polling between adds** — for
+  `thread.add_messages`, `graph.add`, batch, or `zep-ingest` alike — and
+  **poll only once, on the last episode**, when you need retrievability.
+  Expected wait time scales with total episode count in that graph.
 
 ## Implementation: scope → ingest → retrieve
 
@@ -186,6 +190,21 @@ docs (see the [index](#documentation-index)) rather than guessing.
   (`zep-ingest`, or [batch ingestion](https://help.getzep.com/adding-batch-data)
   for large volumes) and live/streaming updates (`thread.add_messages` /
   `graph.add`).
+- **Multi-graph backfills — enqueue everything, then wait once.** Graphs do
+  not share a processing queue; one graph finishing extraction is not a
+  prerequisite for another to accept data. For a backfill into multiple graphs
+  (user and/or standalone), create all destinations and configure
+  ontology/instructions first — ontology is not retroactive — then **submit all
+  episodes to every graph without waiting on another graph's processed status**.
+  Use the [Batch API](https://help.getzep.com/adding-batch-data) or `zep-ingest`
+  with `method="auto"` or `"batch"`. Waiting for graph A to finish before even
+  *sending* to graph B is a common backfill anti-pattern. After all submits are
+  queued, wait or poll once (in parallel per graph if you like) until the facts
+  you need are searchable — only when you are about to search or demo, not after
+  every file or graph. Within a single graph, enqueue all sources together too;
+  do not finish one source before submitting the next unless you have a real
+  dependency (e.g. seed nodes/triples before episodes that must pin to those
+  UUIDs).
 - **Customize extraction (iterate, don't front-load).** Rule of thumb:
   **ontology defines the *shape* of the graph (which entity/edge types exist);
   instructions define *how to interpret* your domain** — don't conflate them.
