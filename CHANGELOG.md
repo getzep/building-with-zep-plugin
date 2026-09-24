@@ -11,6 +11,27 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+## 0.5.0 — 2026-09-24
+
+### Changed
+
+- Position Zep as the unified context layer for enterprise data in the
+  building-with-zep skill, and describe agent memory as one of three
+  solutions: enterprise context graphs, agent memory, and customer and
+  account context. Add a "Choose the solution" section that maps each
+  solution to its graph scope and retrieval path.
+- Use "shared Context Graph" for the base graph type, and note that the SDK
+  and API still call it a standalone graph.
+- Extend the implementation lifecycle to Ingest → Shape the Graph →
+  Retrieve → Govern, with a new section on access policies (RBAC, ABAC,
+  source traceability, Audit Logs, and API Logs) and guidance that retrieved
+  context is evidence, not instruction.
+- Reorganize the documentation index to follow the new docs layout and add
+  the pages that were missing (context type pages, fact-retrieval cookbooks,
+  Memory MCP server, rate limits, HIPAA, BYOM, Zep vs Graphiti, zepctl, FAQ).
+- Replace end-user trigger phrases with developer implementation phrases,
+  starting with "implement Zep for my agent".
+
 ## 0.4.3 — 2026-08-26
 
 ### Changed
