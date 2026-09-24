@@ -457,9 +457,9 @@ page over searching. The server exposes two mechanisms:
 | [Context Lake](https://help.getzep.com/context-lake) | How Zep manages and serves many governed graphs as one system; the context lifecycle |
 | [Context Graph overview](https://help.getzep.com/graph-overview) · [How graph creation works](https://help.getzep.com/how-graph-creation-works) | Graph data structure, provenance, and how episodes become entities and facts |
 | [Architecture patterns](https://help.getzep.com/architecture-patterns) | Scope graphs and choose one-vs-many-graph retrieval |
-| [Context types](https://help.getzep.com/context-types) · [Facts](https://help.getzep.com/facts) · [Observations](https://help.getzep.com/observations) | Understand each context type, bitemporal facts, derived patterns, and auto search |
+| [Context types](https://help.getzep.com/context-types) · [Facts](https://help.getzep.com/facts) · [Entities](https://help.getzep.com/entities) · [Episodes](https://help.getzep.com/episodes) · [Thread summaries](https://help.getzep.com/thread-summaries) · [Observations](https://help.getzep.com/observations) | Understand each context type, bitemporal facts, derived patterns, and auto search |
 | [Retrieval philosophy](https://help.getzep.com/retrieval-philosophy) | Understand recall-over-precision retrieval |
-| [What is context engineering?](https://help.getzep.com/what-is-context-engineering) · [Zep vs. GraphRAG](https://help.getzep.com/zep-vs-graph-rag) | Position Zep against alternatives |
+| [What is context engineering?](https://help.getzep.com/what-is-context-engineering) · [Zep vs. GraphRAG](https://help.getzep.com/zep-vs-graph-rag) · [Zep vs. Graphiti](https://help.getzep.com/zep-vs-graphiti) | Position Zep against alternatives and the open-source Graphiti framework |
 
 **Working with Context — Ingest** (all graphs)
 
@@ -491,6 +491,8 @@ page over searching. The server exposes two mechanisms:
 | [Retrieve](https://help.getzep.com/assembling-context) | Compare the Context Block, context templates, and advanced construction |
 | [Searching the graph](https://help.getzep.com/searching-the-graph) | Scoped search, filters, rerankers |
 | [Advanced construction](https://help.getzep.com/advanced-context-block-construction) | Build custom context blocks (the only context surface for shared graphs) |
+| [Most relevant facts for a query](https://help.getzep.com/how-to-get-most-relevant-facts-for-an-arbitrary-query) · [Facts for a specific node](https://help.getzep.com/how-to-find-facts-relevant-to-a-specific-node) | Cookbook recipes for fact-level retrieval |
+| [Memory MCP server](https://help.getzep.com/memory-mcp-server) | Let your users' off-the-shelf agents (Claude, ChatGPT, other MCP clients) work with the same graphs as the agents you build, secured by your identity provider |
 | [Graph directory](https://help.getzep.com/graph-directory) | Discover shared graphs by name and description before searching them |
 | [Memory security best practices](https://help.getzep.com/memory-security) | Place retrieved context safely per provider; prevent memory poisoning |
 | [Performance best practices](https://help.getzep.com/performance) | Reduce latency and optimize production performance (SDK client reuse, cache warming, concise search) |
@@ -503,6 +505,7 @@ page over searching. The server exposes two mechanisms:
 | [Reading data](https://help.getzep.com/reading-data-from-the-graph) · [Deleting data](https://help.getzep.com/deleting-data-from-the-graph) | Inspect or remove graph data |
 | [Cloning graphs](https://help.getzep.com/cloning-graphs) | Copy a graph (e.g. for testing) |
 | [Debug mode](https://help.getzep.com/debug-mode) | Capture per-episode ingestion logs when diagnosing extraction |
+| [Working with rate limits](https://help.getzep.com/rate-limits) | Handle API rate limits and backpressure in ingestion and retrieval code |
 | [Evaluate Zep for your use case](https://help.getzep.com/evaluate-zep-for-your-use-case) | Benchmark completeness vs. accuracy |
 
 **User graphs only**
@@ -533,13 +536,16 @@ page over searching. The server exposes two mechanisms:
 | [Episode metadata projection](https://help.getzep.com/episode-metadata-projection) | Understand what source-based policies and metadata filters evaluate |
 | [Source traceability](https://help.getzep.com/source-traceability) | Trace facts to source episodes and retain references for audit |
 | [Audit logging](https://help.getzep.com/audit-logging) · [API logging](https://help.getzep.com/api-logging) | Review dashboard activity and API request activity |
-| [Security & compliance](https://help.getzep.com/security-compliance) | SOC 2 Type II, HIPAA BAAs, [BYOK](https://help.getzep.com/bring-your-own-key), BYOM, and Cloud/BYOC deployment models |
+| [Security & compliance](https://help.getzep.com/security-compliance) · [HIPAA compliance](https://help.getzep.com/hipaa-compliance) | SOC 2 Type II, HIPAA BAAs, [BYOK](https://help.getzep.com/bring-your-own-key), [BYOM](https://help.getzep.com/bring-your-own-llm), and Cloud/BYOC deployment models |
 
 **Reference**
 
 - SDK / API reference: <https://help.getzep.com/sdk-reference> — confirm exact
   signatures, parameters, and limits here or via the `zep-docs` MCP.
 - Docs MCP server setup: <https://help.getzep.com/docs-mcp-server>.
+- `zepctl` CLI reference: <https://help.getzep.com/zepctl-cli> — administer
+  Zep projects from the command line.
+- FAQ: <https://help.getzep.com/faq>.
 
 ## Source authority and validation
 
