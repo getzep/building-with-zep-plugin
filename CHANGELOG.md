@@ -11,6 +11,15 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+## 0.5.1 — 2026-10-01
+
+### Fixed
+
+- Fix the building-with-zep skill frontmatter. The `description` value was
+  an unquoted YAML scalar that contained a colon, so strict YAML parsers
+  rejected the skill. The value is now a folded block scalar and is
+  shorter than the 1024-character limit.
+
 ## 0.5.0 — 2026-09-24
 
 ### Changed
