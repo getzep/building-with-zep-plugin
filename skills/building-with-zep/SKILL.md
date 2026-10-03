@@ -369,7 +369,7 @@ separates two problems (hub: [Governance](https://help.getzep.com/governance)):
   [agent access](https://help.getzep.com/attribute-based-access-control) (limit
   which actions, graphs, and data classes an agent can reach — give each agent
   its own key) and to **UserGroups** for
-  [Memory MCP users](https://help.getzep.com/usergroup-access). Source-based
+  [Context MCP users](https://help.getzep.com/usergroup-access). Source-based
   policies evaluate the **episode metadata attached at ingestion** (see
   [Episode metadata projection](https://help.getzep.com/episode-metadata-projection)),
   so decide metadata like `source` at ingest time with governance in mind.
@@ -506,7 +506,7 @@ page over searching. The server exposes two mechanisms:
 | [Searching the graph](https://help.getzep.com/searching-the-graph) | Scoped search, filters, rerankers |
 | [Advanced construction](https://help.getzep.com/advanced-context-block-construction) | Build custom context blocks (the only context surface for shared graphs) |
 | [Most relevant facts for a query](https://help.getzep.com/how-to-get-most-relevant-facts-for-an-arbitrary-query) · [Facts for a specific node](https://help.getzep.com/how-to-find-facts-relevant-to-a-specific-node) | Cookbook recipes for fact-level retrieval |
-| [Memory MCP server](https://help.getzep.com/memory-mcp-server) | Let your users' off-the-shelf agents (Claude, ChatGPT, other MCP clients) work with the same graphs as the agents you build, secured by your identity provider |
+| [Context MCP server](https://help.getzep.com/context-mcp-server) | Let your users' off-the-shelf agents (Claude, ChatGPT, other MCP clients) work with the same graphs as the agents you build, secured by your identity provider |
 | [Graph directory](https://help.getzep.com/graph-directory) | Discover shared graphs by name and description before searching them |
 | [Memory security best practices](https://help.getzep.com/memory-security) | Place retrieved context safely per provider; prevent memory poisoning |
 | [Performance best practices](https://help.getzep.com/performance) | Reduce latency and optimize production performance (SDK client reuse, cache warming, concise search) |
@@ -546,7 +546,7 @@ page over searching. The server exposes two mechanisms:
 |------|----|
 | [Governance](https://help.getzep.com/governance) | Hub: RBAC for humans, ABAC policies for agents and callers, traceability, logs |
 | [Managing team access (RBAC)](https://help.getzep.com/role-based-access-control) · [Enterprise SSO](https://help.getzep.com/enterprise-sso) | Dashboard permissions for teammates and how they sign in |
-| [Policy-based access control](https://help.getzep.com/policy-based-access-control) · [Agent access](https://help.getzep.com/attribute-based-access-control) · [UserGroup access](https://help.getzep.com/usergroup-access) | Attach ABAC policy sets to API keys (agents) and UserGroups (Memory MCP users) for least-privilege access to context |
+| [Policy-based access control](https://help.getzep.com/policy-based-access-control) · [Agent access](https://help.getzep.com/attribute-based-access-control) · [UserGroup access](https://help.getzep.com/usergroup-access) | Attach ABAC policy sets to API keys (agents) and UserGroups (Context MCP users) for least-privilege access to context |
 | [Episode metadata projection](https://help.getzep.com/episode-metadata-projection) | Understand what source-based policies and metadata filters evaluate |
 | [Source traceability](https://help.getzep.com/source-traceability) | Trace facts to source episodes and retain references for audit |
 | [Audit logging](https://help.getzep.com/audit-logging) · [API logging](https://help.getzep.com/api-logging) | Review dashboard activity and API request activity |

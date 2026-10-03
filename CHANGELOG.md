@@ -11,6 +11,13 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+## 0.5.2 — 2026-10-03
+
+### Changed
+
+- Rename the Memory MCP server to the Context MCP server and update its
+  documentation link.
+
 ## 0.5.1 — 2026-10-01
 
 ### Fixed
