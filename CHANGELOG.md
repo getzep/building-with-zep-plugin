@@ -11,6 +11,23 @@ Claude Code also uses it for update detection. Bump it with
 
 ## Unreleased
 
+## 0.6.0 — 2026-10-04
+
+### Changed
+
+- Teach two retrieval models in the skill. Context Block grounding uses one
+  low-latency call for each turn. An agent with Zep tools learns the graph,
+  uses domain knowledge, makes a retrieval plan, and runs several targeted
+  tool calls for complex questions and tasks.
+- Add an invariant: an agent with one search tool and no graph orientation or
+  domain knowledge gets related facts of low value.
+- State that application-authored domain knowledge can go in the system
+  prompt, and that retrieved graph content never goes there.
+- Limit the "favor recall over precision" rule to Context Block grounding.
+- Add agent evaluation guidance to "Evaluating Zep".
+- Index the new "Build an Agent with Zep" and "Build Tools for an Agent"
+  pages. Replace the link to the removed "Retrieval philosophy" page.
+
 ## 0.5.2 — 2026-10-03
 
 ### Changed
