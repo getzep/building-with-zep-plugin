@@ -185,8 +185,8 @@ retrieved context in the application.
   never goes there.
 - **An agent needs graph orientation and domain knowledge, not only a search
   tool.** A model with one search tool and no knowledge of the graph or the
-  domain writes queries from the words in the question. It gets related facts
-  of low value. Learn the graph once per graph (the ontology and the most
+  domain writes queries from the words in the question. It might get related
+  facts of low value. Learn the graph once per graph (the ontology and the most
   connected nodes), give the agent application-authored domain knowledge, and
   make a retrieval plan before the agent retrieves. See
   [Build an Agent with Zep](https://help.getzep.com/build-an-agent-with-zep).
