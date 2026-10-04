@@ -179,7 +179,17 @@ retrieved context in the application.
   through the ordinary data channel (a user message, or a tool result linked to
   its call). Never interpolate retrieved context into the system prompt. See
   [Memory security best practices](https://help.getzep.com/memory-security)
-  for per-provider placement.
+  for per-provider placement. Domain knowledge that the application writes
+  (ranking rules, evidence rules, vocabulary) and the ontology can go in the
+  system prompt. Retrieved graph content, including a sample of graph nodes,
+  never goes there.
+- **An agent needs graph orientation and domain knowledge, not only a search
+  tool.** A model with one search tool and no knowledge of the graph or the
+  domain writes queries from the words in the question. It might get related
+  facts of low value. Learn the graph once per graph (the ontology and the most
+  connected nodes), give the agent application-authored domain knowledge, and
+  make a retrieval plan before the agent retrieves. See
+  [Build an Agent with Zep](https://help.getzep.com/build-an-agent-with-zep).
 - **Zep does not infer beyond the data provided; it is only as good as the data
   it receives.** If context was never sent to Zep, Zep cannot surface it — a
   possible cause of "missing" context is that it was never ingested.
@@ -193,9 +203,13 @@ retrieved context in the application.
   extraction context; `graph.add` does **not**. Episodes with pronouns or bare
   first names (e.g. multiple "John"s with no last name) deduplicate poorly —
   pre-process ambiguous data with stable identifiers (full names, IDs).
-- **Retrieval philosophy — favor recall over precision.** Retrieve broadly and
-  let the downstream LLM ignore what is irrelevant; missing relevant context is
-  worse than including some extra. See [Retrieval philosophy](https://help.getzep.com/retrieval-philosophy).
+- **Context Block grounding favors recall over precision.** The Context Block
+  uses one low-latency, low-token call for each turn. It retrieves broadly and
+  lets the downstream LLM ignore what is irrelevant, because a missing fact is
+  worse than some extra facts. This rule applies to single-shot grounding. For
+  complex questions and tasks, the agent gets precision from a plan and several
+  targeted tool calls. See
+  [Recall, latency, and context size](https://help.getzep.com/retrieving-context#recall-latency-and-context-size).
 - **Ingestion is asynchronous.** Added data is processed before it becomes
   retrievable (seconds or more). Design for eventual availability rather than
   reading back immediately; check status when it matters via
@@ -341,8 +355,21 @@ conflate them.
   (edges, nodes, episodes, observations, thread_summaries) with rerankers and
   **filters** (metadata, timestamp, entity/edge type, property). See
   [Searching the graph](https://help.getzep.com/searching-the-graph).
-- **Decide how the agent retrieves:** expose search as a **tool call** (LLM
-  decides when) vs. **deterministic/programmatic** retrieval on every turn.
+- **Decide how the agent retrieves.** Select one of two models from the task:
+  - *Context Block grounding* — the application makes one retrieval call on
+    each turn (`thread.get_user_context`, a template, or advanced
+    construction). It optimizes for low latency and low token use, not for
+    recall and precision on complex tasks. Use it for conversational grounding.
+  - *Agent with Zep tools* — for complex questions and tasks, the agent drives
+    retrieval. Learn the graph once per graph, inject domain knowledge, plan,
+    run several targeted tool calls (deduplicate by UUID, stop at a budget),
+    and evaluate. Give the agent functional tools (search, list nodes,
+    neighborhood, details) and domain-specific tools for retrieval recipes that
+    the agent repeats. The application pins the graph, security-sensitive
+    filters, the reranker, and the limits; the model controls the task
+    arguments. Do not use auto search as a step in a retrieval plan. See
+    [Build an Agent with Zep](https://help.getzep.com/build-an-agent-with-zep)
+    and [Build Tools for an Agent](https://help.getzep.com/build-agent-tools).
 - **Decide how many graphs** to read (one versus many, using parallel graph
   searches) — an application-layer decision. For customer/account or
   multi-scope tasks, retrieve the user graph via `thread.get_user_context` and
@@ -405,6 +432,11 @@ action permissions.
       instructions, ontology, pre-processing the data).
     - In the derived artifacts but not in the retrieved context → tune
       **retrieval** (search scope, rerankers, filters, context assembly).
+- **For an agent with Zep tools,** grade context completeness on all tool
+  output of the run, not on one search, and grade the final answer separately.
+  Add tools, graph orientation, domain knowledge, and the plan one at a time,
+  and compare each configuration on the same gold questions. See
+  [Build an Agent with Zep](https://help.getzep.com/build-an-agent-with-zep#evaluate).
 - This is why under-deduplication is acceptable (see philosophy above): an
   imperfect graph can still yield complete retrieval, which is what the
   end-to-end evaluation actually measures.
@@ -472,7 +504,7 @@ page over searching. The server exposes two mechanisms:
 | [Context Graph overview](https://help.getzep.com/graph-overview) · [How graph creation works](https://help.getzep.com/how-graph-creation-works) | Graph data structure, provenance, and how episodes become entities and facts |
 | [Architecture patterns](https://help.getzep.com/architecture-patterns) | Scope graphs and choose one-vs-many-graph retrieval |
 | [Context types](https://help.getzep.com/context-types) · [Facts](https://help.getzep.com/facts) · [Entities](https://help.getzep.com/entities) · [Episodes](https://help.getzep.com/episodes) · [Thread summaries](https://help.getzep.com/thread-summaries) · [Observations](https://help.getzep.com/observations) | Understand each context type, bitemporal facts, derived patterns, and auto search |
-| [Retrieval philosophy](https://help.getzep.com/retrieval-philosophy) | Understand recall-over-precision retrieval |
+| [Recall, latency, and context size](https://help.getzep.com/retrieving-context#recall-latency-and-context-size) | Understand recall over precision for single-shot Context Block grounding |
 | [What is context engineering?](https://help.getzep.com/what-is-context-engineering) · [Zep vs. GraphRAG](https://help.getzep.com/zep-vs-graph-rag) · [Zep vs. Graphiti](https://help.getzep.com/zep-vs-graphiti) | Position Zep against alternatives and the open-source Graphiti framework |
 
 **Working with Context — Ingest** (all graphs)
@@ -503,6 +535,7 @@ page over searching. The server exposes two mechanisms:
 | Read | To |
 |------|----|
 | [Retrieve](https://help.getzep.com/assembling-context) | Compare the Context Block, context templates, and advanced construction |
+| [Build an Agent with Zep](https://help.getzep.com/build-an-agent-with-zep) · [Build Tools for an Agent](https://help.getzep.com/build-agent-tools) | Build an agent that plans its retrieval and uses several Zep tools; design functional and domain-specific tools |
 | [Searching the graph](https://help.getzep.com/searching-the-graph) | Scoped search, filters, rerankers |
 | [Advanced construction](https://help.getzep.com/advanced-context-block-construction) | Build custom context blocks (the only context surface for shared graphs) |
 | [Most relevant facts for a query](https://help.getzep.com/how-to-get-most-relevant-facts-for-an-arbitrary-query) · [Facts for a specific node](https://help.getzep.com/how-to-find-facts-relevant-to-a-specific-node) | Cookbook recipes for fact-level retrieval |
