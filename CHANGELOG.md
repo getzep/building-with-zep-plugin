@@ -9,7 +9,18 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
-## Unreleased
+## 0.7.0 — 2026-10-07
+
+### Added
+
+- Add the `tuning-zep-ingestion` skill at
+  `skills/tuning-zep-ingestion/SKILL.md`. It gives the procedure to turn a
+  dataset into a domain-specific Context Graph, from data splitting through
+  versioned ingestion and graph measurement.
+- Tell the agent in the `building-with-zep` skill to use the
+  `tuning-zep-ingestion` skill for ingestion code and tuning. The ingestion
+  skill tells the agent to activate the `building-with-zep` skill first and
+  use `zep-docs` if that skill is not available.
 
 ## 0.6.0 — 2026-10-04
 

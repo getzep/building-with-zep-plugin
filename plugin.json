@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "building-with-zep",
-  "version": "0.6.0",
-  "description": "Build and configure applications that use Zep — agent memory built on temporal Context Graphs. Bundles the building-with-zep skill and the Zep documentation MCP server.",
+  "version": "0.7.0",
+  "description": "Build and configure applications that use Zep — agent memory built on temporal Context Graphs. Bundles the building-with-zep and tuning-zep-ingestion skills and the Zep documentation MCP server.",
   "author": {
     "name": "Zep",
     "url": "https://www.getzep.com"
