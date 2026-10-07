@@ -13,16 +13,14 @@ Claude Code also uses it for update detection. Bump it with
 
 ### Added
 
-- Add the `tuning-zep-ingestion` sub-skill at
-  `skills/building-with-zep/tuning-zep-ingestion/SKILL.md`. The sub-skill is a
-  procedure to turn a dataset into a domain-specific Context Graph. It splits
-  the data into a deterministic import and narrative episodes, designs the
-  ontology and the instructions, runs versioned ingestions, measures the graph
-  shape, and reads the Ingestion Traces.
-- Tell the agent in the building-with-zep skill to use the sub-skill anytime
-  it writes ingestion code or optimizes an ingestion. The agent uses both
-  skills together. The documentation index and the source rules are only in
-  the building-with-zep skill.
+- Add the `tuning-zep-ingestion` skill at
+  `skills/tuning-zep-ingestion/SKILL.md`. It gives the procedure to turn a
+  dataset into a domain-specific Context Graph, from data splitting through
+  versioned ingestion and graph measurement.
+- Tell the agent in the `building-with-zep` skill to use the
+  `tuning-zep-ingestion` skill for ingestion code and tuning. The ingestion
+  skill tells the agent to activate the `building-with-zep` skill first and
+  use `zep-docs` if that skill is not available.
 
 ## 0.6.0 — 2026-10-04
 

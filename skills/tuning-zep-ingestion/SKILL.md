@@ -11,16 +11,23 @@ description: >-
   user asks to "ingest my data into Zep", "improve extraction quality", "why
   does my graph have duplicate or untyped entities", "tune the ontology or the
   instructions", or "evaluate Zep on my dataset". Use together with the
-  building-with-zep skill, which holds the product concepts and the
-  documentation index.
+  building-with-zep skill from the same plugin. Activate that skill first if
+  it is not active yet.
 ---
 
 # Tuning Zep ingestion for a dataset
 
-This skill is a procedure. This skill is a sub-skill of the building-with-zep
-skill. Use both skills together. Use the Documentation index and the source
-rules of the building-with-zep skill. A page name in this skill, such as
-`debug-mode`, is the `help.getzep.com` slug of the page.
+**Required: use this skill together with the building-with-zep skill from
+the same plugin.** If that skill is not active, activate it now, before you
+continue. If your runtime cannot activate skills, read
+[`../building-with-zep/SKILL.md`](../building-with-zep/SKILL.md). Use the
+Documentation index and the source rules of the building-with-zep skill.
+If the building-with-zep skill is not available, read the Zep
+documentation through the `zep-docs` MCP server, or at
+`https://help.getzep.com/<slug>.md`.
+
+This skill is a procedure. A page name in this skill, such as `debug-mode`,
+is the `help.getzep.com` slug of the page.
 
 ## Terms
 

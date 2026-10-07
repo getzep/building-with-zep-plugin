@@ -13,7 +13,7 @@ description: >-
   custom instructions, applying access policies, or evaluating and tuning
   Zep. Triggers on "implement Zep for my agent", "set up a Zep ontology",
   or "why is Zep not returning the right context". For ingestion code or
-  tuning, also read the tuning-zep-ingestion sub-skill. Do not trigger when
+  tuning, also use the tuning-zep-ingestion skill. Do not trigger when
   an end user asks an agent to remember or look up something in its own
   memory.
 ---
@@ -44,20 +44,21 @@ ingested data is perfect.
 > `Memory` API. Zep is a paid product; some features are plan-gated — confirm
 > availability in the docs.
 
-## Sub-skills
+## Related skills
 
-| Sub-skill | Use it when |
+| Skill | Use it when |
 | --- | --- |
-| [`tuning-zep-ingestion`](tuning-zep-ingestion/SKILL.md) | You write code that ingests data into Zep, or you optimize an ingestion. Examples: a backfill, a recurring import, a `zep-ingest` pipeline, a Batch API job, an ontology or custom instructions for extraction, duplicate or untyped entities, or an evaluation of Zep on a dataset. |
+| [`tuning-zep-ingestion`](../tuning-zep-ingestion/SKILL.md) | You write code that ingests data into Zep, or you optimize an ingestion. Examples: a backfill, a recurring import, a `zep-ingest` pipeline, a Batch API job, an ontology or custom instructions for extraction, duplicate or untyped entities, or an evaluation of Zep on a dataset. |
 
-Read the full sub-skill file before you write ingestion code or change an
-ingestion configuration. Use the sub-skill together with this skill. This
-skill keeps the ingestion-path choice, the decision rules, the
-[Documentation index](#documentation-index), and the
-[source rules](#source-authority-and-validation). The sub-skill gives the
-procedure: split the data, shape the episodes, design the ontology and the
-instructions, run a versioned ingestion, measure the graph shape, and change
-one variable per run.
+Activate the tuning-zep-ingestion skill from the same plugin before you
+write ingestion code or change an ingestion configuration. If your runtime
+cannot activate skills, read the linked file. Use that skill together with
+this skill. This skill keeps the ingestion-path choice, the decision rules,
+the [Documentation index](#documentation-index), and the
+[source rules](#source-authority-and-validation). The tuning-zep-ingestion
+skill gives the procedure: split the data, shape the episodes, design the
+ontology and the instructions, run a versioned ingestion, measure the graph
+shape, and change one variable per run.
 
 ## Conceptual overview
 
@@ -275,11 +276,11 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
 
 ### 2. Ingest data into graphs
 
-- **Use the [`tuning-zep-ingestion`](tuning-zep-ingestion/SKILL.md) sub-skill
+- **Use the [`tuning-zep-ingestion`](../tuning-zep-ingestion/SKILL.md) skill
   anytime you write ingestion code or optimize an ingestion.** Read it before
   you write a pipeline, an import, or a Batch API job, and before you tune
-  extraction quality. The rules in this section are the decisions that the
-  sub-skill procedure applies.
+  extraction quality. The procedure of that skill applies the decisions in
+  this section.
 - **Choose an ingestion path** by how the data arrives (see
   [Adding context](https://help.getzep.com/adding-context)):
 
@@ -341,7 +342,7 @@ Rule of thumb: **ontology defines the *shape* of the graph (which entity/edge
 types exist); instructions define *how to interpret* your domain** — don't
 conflate them. To design or tune the ontology and the instructions for an
 ingestion, follow Steps 2, 3, and 7 of the
-[`tuning-zep-ingestion`](tuning-zep-ingestion/SKILL.md) sub-skill.
+[`tuning-zep-ingestion`](../tuning-zep-ingestion/SKILL.md) skill.
 
 - [Custom ontology](https://help.getzep.com/customizing-graph-structure) —
   your entity/edge types. Model entity types as **nouns** and edge types as
@@ -453,7 +454,7 @@ action permissions.
       application ingests. Not a Zep problem.
     - In the episodes but not in derived artifacts → tune **ingestion** (custom
       instructions, ontology, pre-processing the data) with the
-      [`tuning-zep-ingestion`](tuning-zep-ingestion/SKILL.md) sub-skill.
+      [`tuning-zep-ingestion`](../tuning-zep-ingestion/SKILL.md) skill.
     - In the derived artifacts but not in the retrieved context → tune
       **retrieval** (search scope, rerankers, filters, context assembly).
 - **For an agent with Zep tools,** grade context completeness on all tool
