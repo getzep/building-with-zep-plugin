@@ -16,9 +16,6 @@ Once installed, the plugin gives the agent:
 
 - The **`building-with-zep` skill** — how to scope graphs, ingest data, retrieve
   context, and evaluate a Zep integration
-- The **`tuning-zep-ingestion` skill** — a procedure to ingest a dataset into
-  a Context Graph and tune the extraction. It always loads with the
-  `building-with-zep` skill
 - The **`zep-docs` MCP server** — live Zep documentation at
   `https://docs-mcp.getzep.com/mcp` (search and full-page reads)
 
@@ -53,7 +50,7 @@ or open an issue on this repository.
 
 The repository root conforms to
 [Agent Plugins 1.0.0](https://agent-plugins.org/): `plugin.json` identifies the
-package, `skills/` contains the portable skills, and `mcp.json` declares the
+package, `skills/` contains the portable skill, and `mcp.json` declares the
 Streamable HTTP documentation server.
 
 Vendor files remain alongside that portable core so clients do not need to
@@ -64,8 +61,7 @@ adopt the standard before installing the plugin:
 - **Cursor** — loads the Agent Plugins package; `.cursor-plugin/marketplace.json`
   is the Cursor marketplace catalog and points at this repo root (`.`)
 
-Every package path loads the same `skills/` tree: the `building-with-zep` skill
-and the `tuning-zep-ingestion` skill.
+Every package path loads the same `skills/building-with-zep/` tree.
 
 Marketplace catalogs live in this repository:
 
@@ -96,7 +92,6 @@ Both point at `https://docs-mcp.getzep.com/mcp`. Change both together.
 ├── mcp.json
 ├── assets/logo.png
 ├── skills/building-with-zep/SKILL.md
-├── skills/tuning-zep-ingestion/SKILL.md
 ├── .claude-plugin/plugin.json
 ├── .claude-plugin/marketplace.json
 ├── .agents/plugins/marketplace.json
@@ -162,10 +157,6 @@ Concretely:
   and invariants that are cross-cutting and stable over time. E.g. "Zep is not a
   chat-log store and not a vector database," "ontology defines the *shape* of the
   graph; instructions define *how to interpret* your domain."
-- Put the dataset-to-graph ingestion procedure in
-  `skills/tuning-zep-ingestion/SKILL.md`. That skill depends on the
-  building-with-zep skill for the documentation index and the source rules.
-  Do not copy the index into it.
 - **Leave to the docs** (via the `zep-docs` MCP and the skill's documentation
   index) — volatile or exhaustive detail: method names, parameters, limits, plan
   availability, pricing, exact reranker names, template syntax, and the **full

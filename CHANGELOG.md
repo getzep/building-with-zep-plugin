@@ -9,6 +9,14 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.8.0 — 2026-10-07
+
+### Removed
+
+- Remove the `tuning-zep-ingestion` skill that version 0.7.0 added. The
+  plugin content is the same as in version 0.6.0. The `building-with-zep`
+  skill is again the only skill in the plugin.
+
 ## 0.7.0 — 2026-10-07
 
 ### Added
