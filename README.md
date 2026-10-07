@@ -92,6 +92,7 @@ Both point at `https://docs-mcp.getzep.com/mcp`. Change both together.
 ├── mcp.json
 ├── assets/logo.png
 ├── skills/building-with-zep/SKILL.md
+├── skills/building-with-zep/tuning-zep-ingestion/SKILL.md
 ├── .claude-plugin/plugin.json
 ├── .claude-plugin/marketplace.json
 ├── .agents/plugins/marketplace.json
