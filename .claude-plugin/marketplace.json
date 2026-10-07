@@ -11,7 +11,7 @@
     {
       "name": "building-with-zep",
       "source": "./",
-      "description": "Skill plus the Zep documentation MCP server for building apps on Zep.",
+      "description": "Skills plus the Zep documentation MCP server for building apps on Zep.",
       "category": "development",
       "keywords": [
         "zep",
