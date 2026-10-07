@@ -11,7 +11,7 @@
         "source": "local",
         "path": "./"
       },
-      "description": "Skills plus the Zep documentation MCP server for building apps on Zep."
+      "description": "Skill plus the Zep documentation MCP server for building apps on Zep."
     }
   ]
 }
