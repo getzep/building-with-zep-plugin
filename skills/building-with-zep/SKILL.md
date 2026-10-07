@@ -13,8 +13,9 @@ description: >-
   custom instructions, applying access policies, or evaluating and tuning
   Zep. Triggers on "implement Zep for my agent", "set up a Zep ontology",
   or "why is Zep not returning the right context". For ingestion code or
-  tuning, use the tuning-zep-ingestion sub-skill. Do not trigger when an end
-  user asks an agent to remember or look up something in its own memory.
+  tuning, also read the tuning-zep-ingestion sub-skill. Do not trigger when
+  an end user asks an agent to remember or look up something in its own
+  memory.
 ---
 
 # Building with Zep
@@ -50,10 +51,13 @@ ingested data is perfect.
 | [`tuning-zep-ingestion`](tuning-zep-ingestion/SKILL.md) | You write code that ingests data into Zep, or you optimize an ingestion. Examples: a backfill, a recurring import, a `zep-ingest` pipeline, a Batch API job, an ontology or custom instructions for extraction, duplicate or untyped entities, or an evaluation of Zep on a dataset. |
 
 Read the full sub-skill file before you write ingestion code or change an
-ingestion configuration. This skill gives the decision rules and the
-documentation index. The sub-skill gives the procedure: split the data, shape
-the episodes, design the ontology and the instructions, run a versioned
-ingestion, measure the graph shape, and change one variable per run.
+ingestion configuration. Use the sub-skill together with this skill. This
+skill keeps the ingestion-path choice, the decision rules, the
+[Documentation index](#documentation-index), and the
+[source rules](#source-authority-and-validation). The sub-skill gives the
+procedure: split the data, shape the episodes, design the ontology and the
+instructions, run a versioned ingestion, measure the graph shape, and change
+one variable per run.
 
 ## Conceptual overview
 

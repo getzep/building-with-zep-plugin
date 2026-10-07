@@ -20,7 +20,9 @@ Claude Code also uses it for update detection. Bump it with
   ontology and the instructions, runs versioned ingestions, measures the graph
   shape, and reads the Ingestion Traces.
 - Tell the agent in the building-with-zep skill to use the sub-skill anytime
-  it writes ingestion code or optimizes an ingestion.
+  it writes ingestion code or optimizes an ingestion. The agent uses both
+  skills together. The documentation index and the source rules are only in
+  the building-with-zep skill.
 
 ## 0.6.0 — 2026-10-04
 

@@ -17,10 +17,10 @@ description: >-
 
 # Tuning Zep ingestion for a dataset
 
-This skill is a procedure. The Zep documentation holds the method names, the
-parameters, the limits, and the plan availability. Read the documentation
-through the `zep-docs` MCP server, or at `https://help.getzep.com/<slug>.md`.
-When this skill and the documentation disagree, the documentation is correct.
+This skill is a procedure. This skill is a sub-skill of the building-with-zep
+skill. Use both skills together. Use the Documentation index and the source
+rules of the building-with-zep skill. A page name in this skill, such as
+`debug-mode`, is the `help.getzep.com` slug of the page.
 
 ## Terms
 
@@ -308,17 +308,3 @@ aggregate counts and sanitized identifiers.
 - Deleting the graph before the comparison is written.
 - Reading one trace, finding a plausible explanation, and reporting it as the
   cause.
-
-## Documentation pointers
-
-| Page | Content |
-|---|---|
-| `prepare-data-for-ingestion` | Context in each episode, event time, document IDs, seeding the graph, identity properties, limits |
-| `adding-fact-triplets` | `graph.add_nodes`, `graph.add_fact_triple`, node and edge updates |
-| `customizing-graph-structure` | Entity and edge types, `source_targets`, `strict_ontology`, type limits |
-| `custom-instructions` | Named instruction blocks, upsert, limits |
-| `documents`, `chunking-large-documents` | `document_id` and chunking |
-| `adding-batch-data`, `check-data-ingestion-status` | Batch API, limits, terminal states |
-| `debug-mode` | Debug logs and Ingestion Traces: enablement, retention, plan requirements |
-| `reading-data-from-the-graph` | Export of nodes, edges, and episodes for the Step 5 checks |
-| `evaluate-zep-for-your-use-case` | Gold-set practice, completeness and accuracy, the Zep evaluation harness |
