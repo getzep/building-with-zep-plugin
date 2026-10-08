@@ -14,8 +14,19 @@ Claude Code also uses it for update detection. Bump it with
 ### Added
 
 - Add the `tuning-zep-ingestion` skill again, at
-  `skills/tuning-zep-ingestion/SKILL.md`. The skill content and the
-  `building-with-zep` skill references are the same as in version 0.7.0.
+  `skills/tuning-zep-ingestion/SKILL.md`. The `building-with-zep` skill
+  references are the same as in version 0.7.0.
+
+### Changed
+
+- Update the `tuning-zep-ingestion` procedure from version 0.7.0. A new "API
+  surface" table names the operations of each step without SDK method names.
+  The procedure gives the imported node the name that the prose uses, and it
+  refers to edge endpoints by node UUID. The lead sentence keeps the subject
+  identifier and drops the identifiers of related records. Step 4 records the
+  debug-mode result in the manifest and checks the batch debug logs through
+  the API. Step 5 measures three kinds of field repeats, and Step 6 compares
+  the trace totals with the graph totals.
 
 ## 0.8.0 — 2026-10-07
 
