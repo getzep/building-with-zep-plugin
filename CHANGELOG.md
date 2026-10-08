@@ -9,7 +9,7 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
-## 0.9.0 — Unreleased
+## 0.9.0 — 2026-10-08
 
 ### Added
 
