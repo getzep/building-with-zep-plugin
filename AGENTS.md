@@ -15,7 +15,8 @@ When changing repeated guidance, update both files and keep them consistent.
 
 This repository root is an Agent Plugins 1.0.0 package with vendor compatibility
 files for Claude Code, OpenAI Codex / ChatGPT Work, and Cursor. Every runtime
-loads the same `skills/building-with-zep/` tree.
+loads the same `skills/` tree: the `building-with-zep` skill and the
+`tuning-zep-ingestion` skill.
 
 - Do not create ecosystem-specific copies of the skill.
 - Keep the plugin name `building-with-zep` in every manifest.
@@ -220,6 +221,10 @@ documentation.
 
 - Put stable, cross-cutting philosophy, decision rules, mental models, and
   critical invariants in `skills/building-with-zep/SKILL.md`.
+- Put the dataset-to-graph ingestion procedure in
+  `skills/tuning-zep-ingestion/SKILL.md`. That skill depends on the
+  building-with-zep skill for the documentation index and the source rules.
+  Do not copy the index into it.
 - Leave volatile or exhaustive details to the Zep documentation accessed through
   `zep-docs`. This includes method names, parameters, limits, pricing, plan
   availability, exact reranker names, template syntax, and full per-feature
