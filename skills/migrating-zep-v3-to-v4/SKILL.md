@@ -85,7 +85,8 @@ steps" of the guide, in their order. Do not combine or skip a step.
 ### Step 4. Change the code
 
 - Make one migration step of the guide per change, so that the user can
-  deploy and verify each step.
+  deploy and verify each step. Open one PR for each step. Start the next step
+  only after the user has merged and deployed the PR before it.
 - Get each V4 method name and argument from the method map and the V4 SDK
   reference of the installed SDK version. Do not guess a name from the V3
   name.
