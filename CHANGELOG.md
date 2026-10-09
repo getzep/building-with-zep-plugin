@@ -27,6 +27,11 @@ Claude Code also uses it for update detection. Bump it with
   debug-mode result in the manifest and checks the batch debug logs through
   the API. Step 5 measures three kinds of field repeats, and Step 6 compares
   the trace totals with the graph totals.
+- State the rule for the split in the `tuning-zep-ingestion` procedure.
+  Structured data goes into the deterministic import, through one field
+  mapping for each structured schema. Unstructured data becomes narrative
+  episodes. The agent must not use an LLM to make structured records from
+  prose for the import.
 
 ## 0.8.0 — 2026-10-07
 

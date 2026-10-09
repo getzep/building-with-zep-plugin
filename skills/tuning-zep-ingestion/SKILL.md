@@ -53,7 +53,7 @@ version that you install, and record the SDK version in the manifest.
 | Record | One unit of the source data: one database row, one email, one chat message, one document, one event. |
 | Structured field | A field of a record with a fixed meaning and a short value: an ID, a name, a category, a status, a date, a reference to another record. |
 | Prose field | A field of a record with free text: a message body, a document body, a transcript, a ticket description. |
-| Deterministic import | Nodes and edges that you write into the graph from structured fields with the node and edge import calls of the SDK (see "API surface"). No LLM is involved. |
+| Deterministic import | Nodes and edges that you write into the graph from the structured data of the source, through one field mapping for each structured schema (Step 1), with the node and edge import calls of the SDK (see "API surface"). No LLM is involved. |
 | Narrative episode | Text that you send to Zep for LLM extraction, through `graph.add` or the Batch API. |
 | Lead sentence | The first sentence of a narrative episode. It names the record kind, the subject with its identifier, the author, the time, and the source. It uses the same name and identifier for the subject that the deterministic import used. It does not list the identifiers of related records. |
 | Configuration version | An integer that you increase each time you change the ontology, the instructions, or the episode preparation. One graph holds one configuration version. |
@@ -64,9 +64,14 @@ version that you install, and record the SDK version in the manifest.
 ## Principles
 
 1. Import what the data already states. Extract only what the prose adds.
-   A structured field is already a fact. Write it into the graph with the
-   deterministic import before the first episode. Send only the prose fields
-   through LLM extraction. When the LLM also sees the structured fields, it
+   Structured data (database rows, JSON records, spreadsheet rows, email
+   headers, event log rows) goes into the deterministic import: map its fields
+   to entities and edges, and write them into the graph before the first
+   episode. Unstructured data (message bodies, document bodies, transcripts,
+   ticket descriptions) becomes narrative episodes. Do not use an LLM, or your
+   own reading of the text, to make structured records from unstructured data
+   for the import. A production pipeline must run the same import on each new
+   record, with no agent in the loop. When the LLM also sees the structured fields, it
    extracts them again. The edge deduplication merges exact repeats, and it
    keeps a near repeat (a different edge name, or a fact that restates an
    attribute value) as a new edge.
@@ -135,9 +140,22 @@ because the limits and the method names change.
 
 ### Step 1. Split the dataset
 
+The rule for the split: structured data goes into the deterministic import,
+and unstructured data becomes narrative episodes (principle 1). A record often
+has both kinds, for example an email with headers and a body, or a ticket with
+a status and a description. Split each record by field.
+
+For each structured schema in the data (each table, each JSON record type, each
+file layout), write a field mapping before you write code. The mapping states
+the result of each field in the graph: an entity, an attribute of an entity, an
+edge between two entities, or nothing. Map only to the kinds of entities,
+relationships, and attributes in the first column of the table below, and use
+the same type names in the ontology (Step 2). The import code applies the
+mappings and nothing else, so that it can run again on each new record.
+
 Write the split as a table before you write code:
 
-| Deterministic import | Narrative episodes | Dropped |
+| Deterministic import (structured data) | Narrative episodes (unstructured data) | Dropped |
 |---|---|---|
 | Entities with a natural ID: people, accounts, cases, products, tickets, documents, channels, meetings | The prose fields, each with a lead sentence | Records with no prose and no relationship, for example a code table |
 | Relationships that the records state: reports-to, works-on, authored, attends, filed-against, has-status | Facts that only the prose states: what happened, who said what, decisions, amounts, reasons | Header lines, MIME lines, signatures, redaction markers |
@@ -355,6 +373,9 @@ aggregate counts and sanitized identifiers.
 
 ## Anti-patterns
 
+- Using an LLM or an agent to make structured records from prose for the
+  deterministic import. That step does not run again by itself on new
+  production data, and it replaces the Zep extraction.
 - Sending the full record as JSON and expecting the model to produce the entity
   graph. The model produces a near copy of the record, with the IDs as entity
   names and a generic relation for each field.
