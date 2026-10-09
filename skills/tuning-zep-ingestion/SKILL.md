@@ -31,8 +31,8 @@ is the `help.getzep.com` slug of the page.
 
 ## API surface
 
-The procedure uses these operations. The SDK major version gives each operation
-a different method name. Get the method names from the documentation of the SDK
+The procedure uses these operations. Some method names are
+different in each SDK major version. Get the method names from the documentation of the SDK
 version that you install, and record the SDK version in the manifest.
 
 | Operation | Used in | Notes |
