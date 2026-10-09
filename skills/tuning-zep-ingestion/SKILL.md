@@ -322,7 +322,7 @@ episode, get the debug logs and the Ingestion Traces through the API. Record:
 | Node resolution: extracted node, resolved node, candidates | Which nodes merged, into what, and with which candidates? A merge onto a different record is an identity failure. |
 | Edge resolution: new edges, merged edges, invalidations | How many exact repeats merged? How many near repeats survived? |
 | Attempt count, validation status, error details | Did a stage retry or fail? A failed trace does not change the graph. |
-| Stage timestamps | Where did the time go? |
+| Trace creation times | In what order did the steps run? The gaps between them give only an approximate time for each step. |
 
 Aggregate the stage outputs over all episodes with a script. Compare the
 number of new nodes in the node-resolution traces with the number of extracted
