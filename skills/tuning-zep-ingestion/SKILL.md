@@ -79,8 +79,8 @@ version that you install, and record the SDK version in the manifest.
    the earlier episodes that have the same `document_id` (`documents`), so give
    the parts of one source the same `document_id`. Without a `document_id`, Zep
    extracts the episode alone. Put the identity of the subject, the author, the
-   time, and the source into the lead sentence of each episode. Episode metadata is for search filters. The extractor does not
-   read it.
+   time, and the source into the lead sentence of each episode. Episode
+   metadata is for search filters. The extractor does not read it.
 3. Identity is a data decision. Decide the canonical name and the identifier of
    each entity type before the ingestion. When you have an authoritative alias
    map, rewrite the aliases in the data. Declare `identity_properties` for the
