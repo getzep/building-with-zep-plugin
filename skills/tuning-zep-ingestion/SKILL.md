@@ -75,10 +75,11 @@ version that you install, and record the SDK version in the manifest.
    extracts them again. The edge deduplication merges exact repeats, and it
    keeps a near repeat (a different edge name, or a fact that restates an
    attribute value) as a new edge.
-2. Each episode must stand alone. The extractor sees one episode. In a batch of
-   `text` episodes, the extractor does not see the previous episodes. Put the
-   identity of the subject, the author, the time, and the source into the lead
-   sentence. Episode metadata is for search filters. The extractor does not
+2. Each episode must stand alone. The extractor sees one episode. It also sees
+   the earlier episodes that have the same `document_id` (`documents`), so give
+   the parts of one source the same `document_id`. Without a `document_id`, Zep
+   extracts the episode alone. Put the identity of the subject, the author, the
+   time, and the source into the lead sentence of each episode. Episode metadata is for search filters. The extractor does not
    read it.
 3. Identity is a data decision. Decide the canonical name and the identifier of
    each entity type before the ingestion. When you have an authoritative alias
@@ -346,7 +347,7 @@ again, and compare the two Step 5 tables.
 | Many untyped nodes | A missing type | Add the noun type that the prose needs, with a membership definition. |
 | A long tail of edge names | Free event extraction | Declare a closed event edge set with endpoints, or set `strict_ontology` and measure the recall cost. |
 | Many generic edges | Endpoint pairs not declared | Add the `source_targets` that the prose uses. |
-| The second part of a document loses its subject | No previous-episode view in a `text` batch | Repeat the identity in each part. Make the parts shorter. |
+| The second part of a document loses its subject | The parts do not have the same `document_id` | Give all the parts of the document the same `document_id`. Repeat the identity in each part. |
 | Missing episodes | A payload limit or a renamed field | Read the batch item errors. Repair the preparation. |
 
 Stop the iteration when the identity checks pass for each imported record,
