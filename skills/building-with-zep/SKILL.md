@@ -43,12 +43,15 @@ ingested data is perfect.
 > Python/TypeScript, `github.com/getzep/zep-go/v3` for Go). Ignore the legacy V2
 > `Memory` API. Zep is a paid product; some features are plan-gated — confirm
 > availability in the docs.
+> To migrate an application from V3 to V4, use the
+> [`migrating-zep-v3-to-v4`](../migrating-zep-v3-to-v4/SKILL.md) skill.
 
 ## Related skills
 
 | Skill | Use it when |
 | --- | --- |
 | [`tuning-zep-ingestion`](../tuning-zep-ingestion/SKILL.md) | You write code that ingests data into Zep, or you optimize an ingestion. Examples: a backfill, a recurring import, a `zep-ingest` pipeline, a Batch API job, an ontology or custom instructions for extraction, duplicate or untyped entities, or an evaluation of Zep on a dataset. |
+| [`migrating-zep-v3-to-v4`](../migrating-zep-v3-to-v4/SKILL.md) | You migrate an application from the Zep V3 API and SDKs to V4. |
 
 Activate the tuning-zep-ingestion skill from the same plugin before you
 write ingestion code or change an ingestion configuration. If your runtime
@@ -59,6 +62,8 @@ the [Documentation index](#documentation-index), and the
 skill gives the procedure: split the data, shape the episodes, design the
 ontology and the instructions, run a versioned ingestion, measure the graph
 shape, and change one variable per run.
+
+Activate the migrating-zep-v3-to-v4 skill before you change V3 code to V4.
 
 ## Conceptual overview
 

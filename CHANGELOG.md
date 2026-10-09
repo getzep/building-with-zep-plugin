@@ -9,6 +9,14 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.10.0 — Unreleased
+
+### Added
+
+- Add the `migrating-zep-v3-to-v4` skill at
+  `skills/migrating-zep-v3-to-v4/SKILL.md`.
+- Link to the migration skill from the `building-with-zep` skill.
+
 ## 0.9.0 — 2026-10-08
 
 ### Added
