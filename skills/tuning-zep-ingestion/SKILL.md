@@ -40,7 +40,7 @@ version that you install, and record the SDK version in the manifest.
 | Create a graph, set the ontology, set the custom instructions | Step 4 | |
 | Enable debug mode | Step 4 | The current SDK has a call for this. The call returns the window duration and a flag that states whether Ingestion Traces are on. Record both in the manifest. |
 | Add nodes | Step 4 | Returns the node UUIDs. Keep them in the state file. |
-| Add edges between two nodes | Step 4 | Refer to each endpoint by node UUID, not by name. A name lookup can select the wrong node when two imported nodes have the same name. |
+| Add edges between two nodes | Step 4 | Refer to each endpoint by node UUID, not by name. The documentation of the SDK version tells whether a name makes a new node or matches an existing node by name. A match by name can select the wrong node when two imported nodes have the same name. |
 | Create a batch, add items, process the batch, poll the batch and its items | Step 4 | |
 | List the nodes, the edges, and the episodes of a graph, with paging | Step 5 | Each node and edge carries the UUIDs of the episodes that produced it. |
 | Get the debug logs and list the Ingestion Traces of one episode | Step 6 | |
@@ -213,9 +213,10 @@ Rules for the narrative episodes:
   example. Do not list values in the description (principle 4).
 - Declare `identity_properties` for each type that has an ID in the lead
   sentence.
-- Declare the `source_targets` of each edge type. Zep stores an extracted edge
-  whose endpoints do not match a declared pair under the generic edge name
-  `RELATES_TO`. Count these edges in Step 5.
+- Declare the `source_targets` of each edge type. With `strict_ontology` set
+  to `false`, Zep stores an extracted edge whose endpoints do not match a
+  declared pair under the generic edge name `RELATES_TO`. Count these edges in
+  Step 5. With `true`, Zep drops these edges.
 - Keep a type that exists only for the import in the ontology, because a search
   filter needs the label. Tell the extractor in the instructions that these
   nodes exist, and that the prose adds facts to them. Expect partial compliance
@@ -285,12 +286,12 @@ because you will run it on each configuration version:
 |---|---|---|
 | Nodes by type, and untyped nodes | Count the labels. A node with only the generic label is untyped. | Many untyped nodes: the ontology lacks a type that the prose needs, or a type description is unclear. |
 | Edges by name, inside and outside the ontology | Compare each edge name with the declared set. | A long tail (many names with one to five edges each): the prose has event facts with no declared edge type. Declare a closed event set, or accept the tail and rank. |
-| Generic edges | Count the edges named `RELATES_TO`. | The endpoints did not match a declared pair, or no type matched. |
+| Generic edges | Count the edges named `RELATES_TO`. | The endpoints did not match a declared pair, or no type matched. With `strict_ontology` set to `true`, Zep drops these edges, so a low count does not show that the endpoints matched. |
 | Identity correctness | For each imported node, compare the identity property values, the name, and the labels in the graph with the import plan. Report the changed nodes by type. | A wrong ID: a later extraction changed an imported attribute, or two records merged. Only this comparison finds the change. |
 | Identity collisions | Nodes of one type with the same name or the same ID. Edges between two nodes of a type that must not be related, for example case to case. | Context leaked across records, or aliases merged. |
 | Field repeats | The three kinds in the Terms table, each as a share of the extracted edges. | The extractor emitted a structured field again (principle 4). |
 | Node coverage | The share of extracted node names that occur in the episode text. | A low share for one type: the model takes the values from the type description. |
-| Episode coverage | Each prepared episode key is present and processed. Failed items by key. | Missing episodes: a payload limit or a rejected field. |
+| Episode coverage | Each prepared episode key is present and processed. Failed items by key. | Missing episodes: items that failed, were skipped, or were canceled, items that are still processing, or a batch that is invalid. |
 | Import integrity | The imported node and edge counts equal the plan. | A retry doubled the import, or a chunk failed. |
 | Timing | Items per minute, per batch. | A slow run. Do not infer the cause from one run. |
 
@@ -348,7 +349,7 @@ again, and compare the two Step 5 tables.
 | A long tail of edge names | Free event extraction | Declare a closed event edge set with endpoints, or set `strict_ontology` and measure the recall cost. |
 | Many generic edges | Endpoint pairs not declared | Add the `source_targets` that the prose uses. |
 | The second part of a document loses its subject | The parts do not have the same `document_id` | Give all the parts of the document the same `document_id`. Repeat the identity in each part. |
-| Missing episodes | A payload limit or a renamed field | Read the batch item errors. Repair the preparation. |
+| Missing episodes | Batch items that failed, were skipped, or were canceled, or a batch that is still processing or is invalid | Read the batch status, and the status and the error of each item. Repair the preparation, and send only the missing items again. |
 
 Stop the iteration when the identity checks pass for each imported record,
 the field repeats and the untyped share are at the level that the use case
