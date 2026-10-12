@@ -185,6 +185,8 @@ Write the split as a table before you write code:
 
 Rules for the deterministic import:
 
+- Give each entity node the name that the prose uses for the entity
+  (principle 3).
 - Create one edge per stated relationship. Write a `fact` sentence that names
   both endpoints in full, with the date when the record has one. Example:
   `"Ana Ruiz attends the meeting 'Q3 plan review' on 2026-03-04."` The sentence
