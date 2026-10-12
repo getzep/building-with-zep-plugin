@@ -9,6 +9,16 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.10.0 — 2026-10-12
+
+### Changed
+
+- Add data-model rules that keep one node per business entity, keep question
+  fields in searchable edge facts, and create shared types only when the
+  questions need them.
+- Add a small pilot before the first full ingestion. Search three questions
+  about one entity and review the top 10 results before you continue.
+
 ## 0.9.0 — 2026-10-08
 
 ### Added

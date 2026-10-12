@@ -162,11 +162,29 @@ Write the split as a table before you write code:
 | Relationships that the records state: reports-to, works-on, authored, attends, filed-against, has-status | Facts that only the prose states: what happened, who said what, decisions, amounts, reasons | Header lines, MIME lines, signatures, redaction markers |
 | Attributes with a closed vocabulary: categories, statuses, regions | | |
 
+### Data model
+
+1. Create one node per business entity (a person, an account, a portfolio), not
+   one node per record or per row. Reason: retrieval searches edge facts and
+   returns the facts of the nodes that match. When one entity is split over
+   many record nodes, each node holds a small part of the facts, no single node
+   matches well, and the top results are the fragments of the wrong records.
+2. Store the natural ID in a node attribute, and keep every field that a
+   question can ask for in an edge `fact` sentence. Reason: edge search reads
+   the fact text and does not read node attributes. A field that exists only
+   as an attribute cannot be found by a question.
+3. Do not create a shared concept type (`Control`, `Requirement`, `Policy`)
+   that connects to many entities, unless the questions that the application
+   asks name that concept (for example, 'which portfolios require the owner's
+   approval'). When you have no question set, write 5 questions from the use
+   case before you design the model, as Step 5 describes. Reason: each shared
+   node brings all of its edges into the results for every entity that
+   connects to it. In one measured run, 284 of the 430 top-10 result slots for
+   one portfolio were facts about other portfolios through such nodes, and the
+   gold result was 24 of 43 against 42 with the same data and no shared type.
+
 Rules for the deterministic import:
 
-- Create one node per entity. Give the node the name that the prose uses for
-  the entity (principle 3). Store the natural ID in a node attribute, so that
-  you can join the graph to the source.
 - Create one edge per stated relationship. Write a `fact` sentence that names
   both endpoints in full, with the date when the record has one. Example:
   `"Ana Ruiz attends the meeting 'Q3 plan review' on 2026-03-04."` The sentence
@@ -244,12 +262,21 @@ works only when the prompt does not offer the forbidden value in another place
 
 ### Step 4. Run a versioned ingestion
 
-1. Create a new graph. Put the dataset name, the configuration version, and the
+1. Run a pilot before the first full version: a new graph with about 10 source
+   records and their episodes, the same ontology and instructions. Reason: the
+   data model decides the result more than the model effort or the
+   instructions, and the full ingestion takes an hour; the pilot shows a wrong
+   model in 5 minutes. Search 3 questions about one entity; take them from the
+   gold set when one exists, otherwise from the questions you wrote for the
+   use case. Read the top 10. When fewer than 4 of the 10 facts name that
+   entity, or a field that a question asks for is only in an attribute, change
+   the data model first. Record the pilot result in the manifest.
+2. Create a new graph. Put the dataset name, the configuration version, and the
    first eight characters of the data hash in the graph ID.
-2. Set the ontology and the instructions. Record their hashes in the manifest.
+3. Set the ontology and the instructions. Record their hashes in the manifest.
    The ontology and the instructions apply only to episodes that Zep processes
    after you set them.
-3. Enable debug mode on the project through the SDK call. Record the returned
+4. Enable debug mode on the project through the SDK call. Record the returned
    window duration and the trace flag in the manifest. When the trace flag is
    off, your plan does not include Ingestion Traces; the `debug-mode` page
    gives the plan requirements and the retention. Confirm that the API key and
@@ -258,17 +285,17 @@ works only when the prompt does not offer the forbidden value in another place
    run, or make the slice smaller. After the first batch item completes, get
    its debug logs through the API; use the API result, not a documentation
    statement, to decide whether batch items have per-episode debug logs.
-4. Run the deterministic import. Wait for its tasks. Count the created nodes and
+5. Run the deterministic import. Wait for its tasks. Count the created nodes and
    edges and compare the counts with the plan from Step 1.
-5. Submit all narrative episodes through the Batch API in event-time order, in
+6. Submit all narrative episodes through the Batch API in event-time order, in
    batches of the documented maximum size, without a wait between the batches.
-6. Record the start time in the manifest. Measure the time of the first
+7. Record the start time in the manifest. Measure the time of the first
    processing window (the first group of items that complete together) and
    estimate the run time of the full batch from it before you plan the next
    version.
-7. Poll until each batch and each item is terminal. Record each failed item by
+8. Poll until each batch and each item is terminal. Record each failed item by
    key. Record the end time.
-8. Keep the graph until the comparison report is written.
+9. Keep the graph until the comparison report is written.
 
 Zep dispatches the items of one graph in the order of submission, and it
 processes a window of items at the same time. An episode does not see the nodes
