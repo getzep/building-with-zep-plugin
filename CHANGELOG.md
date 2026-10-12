@@ -17,6 +17,10 @@ Claude Code also uses it for update detection. Bump it with
   `skills/migrating-zep-v3-to-v4/SKILL.md`.
 - Link to the migration skill from the `building-with-zep` skill.
 
+### Changed
+
+- The `building-with-zep` skill now targets the Zep V4 API and SDKs.
+
 ## 0.9.0 — 2026-10-08
 
 ### Added
