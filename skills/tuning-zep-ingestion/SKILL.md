@@ -268,7 +268,8 @@ works only when the prompt does not offer the forbidden value in another place
    records and their episodes, the same ontology and instructions. Reason: the
    data model decides the result more than the model effort or the
    instructions, and the full ingestion takes an hour; the pilot shows a wrong
-   model in 5 minutes. Search 3 questions about one entity; take them from the
+   model in 5 minutes. Wait until each pilot batch item is terminal, then
+   search 3 questions about one entity; take them from the
    gold set when one exists, otherwise from the questions you wrote for the
    use case. Read the top 10. When fewer than 4 of the 10 facts name that
    entity, or a field that a question asks for is only in an attribute, change
