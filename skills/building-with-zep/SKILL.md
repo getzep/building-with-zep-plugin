@@ -385,7 +385,8 @@ ingestion, follow Steps 2, 3, and 7 of the
     for custom blocks on any graph. See
     [Advanced construction](https://help.getzep.com/advanced-context-block-construction).
   Hub: [Retrieve](https://help.getzep.com/assembling-context).
-- **Search** with `graph.get_context` for auto retrieval. Use
+- **Search** with `graph.get_context` for auto retrieval (recommended entry point
+  for shared-graph/non-thread queries, spans all context types). Use
   `graph.search_edges`, `graph.search_nodes`, `graph.search_episodes`,
   `graph.search_observations`, or `graph.search_thread_summaries` for a
   specific context type. Add rerankers and **filters** (metadata, timestamp,
