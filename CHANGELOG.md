@@ -9,6 +9,14 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.10.1 — Unreleased
+
+### Changed
+
+- The ingestion skill now defines data-model rules for business entities,
+  searchable edge facts, and shared concept types.
+- The ingestion workflow now runs a pilot before the first full ingestion.
+
 ## 0.10.0 — Unreleased
 
 ### Added
