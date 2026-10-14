@@ -116,6 +116,57 @@ version that you install, and record the SDK version in the manifest.
 
 ## Procedure
 
+### Intake. Ask about the use case and the test data
+
+Do this step before Step 0. Ask the user only the questions that the
+conversation and the data do not answer. Put all the questions in one message.
+Do not start Step 1 until the user answers, or until the user tells you to
+continue without the answers.
+
+Ask these questions:
+
+1. How will the graph be used? Ask what the customer tries to do with the
+   graph: the agent or the application that reads the graph, and the task of
+   that agent.
+2. Which questions must the graph answer? Ask for 5 to 20 real questions that
+   the users of the agent ask.
+3. Does the customer have evaluation question-and-answer pairs? When pairs
+   exist, ask the user to upload them. When no pairs exist, tell the user that
+   you will write draft pairs from the data (Step 5), and ask the user to
+   correct them.
+4. Can the user upload a sample of the data? Ask for a sample of each record
+   kind. Ask that the sample include the records that the questions refer to.
+
+Example message to the user:
+
+> Before I design the ontology, I need some information about the use case.
+>
+> 1. How will the graph be used? For example: "A support agent reads the
+>    graph to answer questions about the orders and the returns of a
+>    customer."
+> 2. Which questions must the graph answer? Give 5 to 20 real examples.
+> 3. Do you have evaluation question-and-answer pairs? If yes, upload them as
+>    a CSV or a JSON file. The format is below.
+> 4. Upload a sample of the data that you want to ingest. Include the records
+>    that the questions refer to.
+>
+> If you do not have question-and-answer pairs, I will write draft pairs from
+> the data. You can then correct them.
+
+Example question-and-answer file. The `evidence` column is optional. It holds
+the IDs of the source records that contain the answer.
+
+```csv
+question,answer,evidence
+"Which plan does Acme Corp use?","Enterprise, since 2026-03-01","account-1042; email-88213"
+"Who is the main contact for the Acme renewal?","Jane Doe, VP Operations","contact-551"
+"Why did Acme open a support ticket in May?","The SSO login failed after a certificate change","ticket-7730"
+```
+
+Record the answers in the project notes. Use the use case and the questions
+in Step 0 (question kinds), Step 2 (the types that the questions need), and
+Step 5 (the needle check).
+
 ### Step 0. Learn the data
 
 Read a sample of each record kind. For each kind, fill one row of this table
@@ -131,8 +182,9 @@ Also record:
   episode size limit. Zep rejects an episode above the limit and does not
   truncate it.
 - The alias patterns: short names, logins, email addresses, IDs with prefixes.
-- Whether a gold question set exists. When one exists, read each question kind
-  and note which structured fields and which prose each kind needs.
+- Whether a gold question set exists (see "Intake"). When one exists, read
+  each question kind and note which structured fields and which prose each
+  kind needs.
 
 Then read these documentation pages: `prepare-data-for-ingestion`,
 `adding-fact-triplets`, `customizing-graph-structure`, `custom-instructions`,
