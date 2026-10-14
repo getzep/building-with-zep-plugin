@@ -9,6 +9,17 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.9.1 — 2026-10-14
+
+### Added
+
+- Add an "Intake" step to the `tuning-zep-ingestion` procedure, before Step 0.
+  The agent asks how the graph will be used, which questions the graph must
+  answer, and whether the customer has evaluation question-and-answer pairs.
+  The agent also asks the user to upload a sample of the data. The step
+  includes an example message to the user and an example question-and-answer
+  CSV file. Step 0 refers to the Intake step for the gold question set.
+
 ## 0.9.0 — 2026-10-08
 
 ### Added
