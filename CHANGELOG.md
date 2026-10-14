@@ -9,15 +9,25 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
-## 0.10.0 — 2026-10-14
+## 0.10.1 — Unreleased
 
 ### Changed
 
-- Add data-model rules that keep one node per business entity, keep question
-  fields in searchable edge facts, and create shared types only when the
-  questions need them.
-- Add a small pilot before the first full ingestion. Search three questions
-  about one entity and review the top 10 results before you continue.
+- The ingestion skill now defines data-model rules for business entities,
+  searchable edge facts, and shared concept types.
+- The ingestion workflow now runs a pilot before the first full ingestion.
+
+## 0.10.0 — Unreleased
+
+### Added
+
+- Add the `migrating-zep-v3-to-v4` skill at
+  `skills/migrating-zep-v3-to-v4/SKILL.md`.
+- Link to the migration skill from the `building-with-zep` skill.
+
+### Changed
+
+- The `building-with-zep` skill now targets the Zep V4 API and SDKs.
 
 ## 0.9.1 — 2026-10-14
 

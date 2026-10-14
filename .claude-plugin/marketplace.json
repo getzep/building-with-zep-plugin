@@ -11,7 +11,7 @@
     {
       "name": "building-with-zep",
       "source": "./",
-      "description": "Skills plus the Zep documentation MCP server for building apps on Zep.",
+      "description": "This plugin includes the building-with-zep, tuning-zep-ingestion, and migrating-zep-v3-to-v4 skills, plus the Zep documentation MCP server.",
       "category": "development",
       "keywords": [
         "zep",

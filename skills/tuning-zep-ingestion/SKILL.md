@@ -54,7 +54,7 @@ version that you install, and record the SDK version in the manifest.
 | Structured field | A field of a record with a fixed meaning and a short value: an ID, a name, a category, a status, a date, a reference to another record. |
 | Prose field | A field of a record with free text: a message body, a document body, a transcript, a ticket description. |
 | Deterministic import | Nodes and edges that you write into the graph from the structured data of the source, through one field mapping for each structured schema (Step 1), with the node and edge import calls of the SDK (see "API surface"). No LLM is involved. |
-| Narrative episode | Text that you send to Zep for LLM extraction, through `graph.add` or the Batch API. |
+| Narrative episode | Text that you send to Zep for LLM extraction, through `graph.episode.add` or the Batch API. |
 | Lead sentence | The first sentence of a narrative episode. It names the record kind, the subject with its identifier, the author, the time, and the source. It uses the same name and identifier for the subject that the deterministic import used. It does not list the identifiers of related records. |
 | Configuration version | An integer that you increase each time you change the ontology, the instructions, or the episode preparation. One graph holds one configuration version. |
 | Manifest | A file that records, for one run, the configuration version, a hash of the configuration, a hash of the prepared data, the graph ID, the debug-mode result, the start time, and the end time. Write each hash at run time and do not compute it again later. Freeze the prepared data file of each version. |
@@ -228,12 +228,10 @@ Write the split as a table before you write code:
 3. Do not create a shared concept type (`Control`, `Requirement`, `Policy`)
    that connects to many entities, unless the questions that the application
    asks name that concept (for example, 'which portfolios require the owner's
-   approval'). When you have no question set, write 5 questions from the use
+   approval'). When you have no question set, write five questions from the use
    case before you design the model, as Step 5 describes. Reason: each shared
    node brings all of its edges into the results for every entity that
-   connects to it. In one measured run, 284 of the 430 top-10 result slots for
-   one portfolio were facts about other portfolios through such nodes, and the
-   gold result was 24 of 43 against 42 with the same data and no shared type.
+   connects to it. Search results can then contain facts about other entities.
 
 Rules for the deterministic import:
 
@@ -318,14 +316,13 @@ works only when the prompt does not offer the forbidden value in another place
 
 1. Run a pilot before the first full version: a new graph with about 10 source
    records and their episodes, the same ontology and instructions. Reason: the
-   data model decides the result more than the model effort or the
-   instructions, and the full ingestion takes an hour; the pilot shows a wrong
-   model in 5 minutes. Wait until each pilot batch item is terminal, then
-   search 3 questions about one entity; take them from the
-   gold set when one exists, otherwise from the questions you wrote for the
-   use case. Read the top 10. When fewer than 4 of the 10 facts name that
-   entity, or a field that a question asks for is only in an attribute, change
-   the data model first. Record the pilot result in the manifest.
+   pilot checks the data model before the full ingestion. Wait until each pilot
+   batch item is terminal. Search three questions about one entity.
+   Use questions from the gold set when it exists. Otherwise, use questions
+   that you wrote for the use case. Read the top 10 results.
+   If fewer than four of the 10 facts name the entity, change the data model.
+   If a question needs a field that appears only in an attribute, change the
+   data model. Record the pilot result in the manifest.
 2. Create a new graph. Put the dataset name, the configuration version, and the
    first eight characters of the data hash in the graph ID.
 3. Set the ontology and the instructions. Record their hashes in the manifest.
