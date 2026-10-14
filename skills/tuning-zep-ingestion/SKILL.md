@@ -228,11 +228,12 @@ Write the split as a table before you write code:
 3. Do not create a shared concept type (`Control`, `Requirement`, `Policy`)
    that connects to many entities, unless the questions that the application
    asks name that concept (for example, 'which portfolios require the owner's
-   approval'). When you have no question set, write five questions of the kinds
-   in Step 0 before you design the model. Step 5 adds the full question set
-   after the ingestion. Reason: each shared node brings all of its edges into
-   the results for every entity that connects to it. Search results can then
-   contain facts about other entities.
+   approval'). When you have no question set, write five questions from the use
+   case before you design the model. Use the question kinds that Step 5 lists
+   (point in time, current state, count, sequence, who did what). Step 5 adds
+   the full question set after the ingestion. Reason: each shared node brings
+   all of its edges into the results for every entity that connects to it.
+   Search results can then contain facts about other entities.
 
 Rules for the deterministic import:
 
