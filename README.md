@@ -19,6 +19,8 @@ Once installed, the plugin gives the agent:
 - The **`tuning-zep-ingestion` skill** — a procedure to ingest a dataset into
   a Context Graph and tune the extraction. It always loads with the
   `building-with-zep` skill
+- The **`migrating-zep-v3-to-v4` skill** — steps to move an application from
+  the Zep V3 API and SDKs to V4. Use it with the `building-with-zep` skill.
 - The **`zep-docs` MCP server** — live Zep documentation at
   `https://docs-mcp.getzep.com/mcp` (search and full-page reads)
 
@@ -64,8 +66,8 @@ adopt the standard before installing the plugin:
 - **Cursor** — loads the Agent Plugins package; `.cursor-plugin/marketplace.json`
   is the Cursor marketplace catalog and points at this repo root (`.`)
 
-Every package path loads the same `skills/` tree: the `building-with-zep` skill
-and the `tuning-zep-ingestion` skill.
+Every package path loads the same `skills/` tree: the `building-with-zep`,
+`tuning-zep-ingestion`, and `migrating-zep-v3-to-v4` skills.
 
 Marketplace catalogs live in this repository:
 
@@ -97,6 +99,7 @@ Both point at `https://docs-mcp.getzep.com/mcp`. Change both together.
 ├── assets/logo.png
 ├── skills/building-with-zep/SKILL.md
 ├── skills/tuning-zep-ingestion/SKILL.md
+├── skills/migrating-zep-v3-to-v4/SKILL.md
 ├── .claude-plugin/plugin.json
 ├── .claude-plugin/marketplace.json
 ├── .agents/plugins/marketplace.json
@@ -164,6 +167,10 @@ Concretely:
   graph; instructions define *how to interpret* your domain."
 - Put the dataset-to-graph ingestion procedure in
   `skills/tuning-zep-ingestion/SKILL.md`. That skill depends on the
+  building-with-zep skill for the documentation index and the source rules.
+  Do not copy the index into it.
+- Put the V3-to-V4 migration procedure in
+  `skills/migrating-zep-v3-to-v4/SKILL.md`. That skill depends on the
   building-with-zep skill for the documentation index and the source rules.
   Do not copy the index into it.
 - **Leave to the docs** (via the `zep-docs` MCP and the skill's documentation

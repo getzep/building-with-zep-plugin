@@ -39,16 +39,20 @@ Success is whether the agent receives **complete context** and produces
 **accurate answers** for that use case — not whether the graph is perfect or the
 ingested data is perfect.
 
-> Guidance here targets **Zep V3** (SDK packages `zep-cloud` for
-> Python/TypeScript, `github.com/getzep/zep-go/v3` for Go). Ignore the legacy V2
-> `Memory` API. Zep is a paid product; some features are plan-gated — confirm
-> availability in the docs.
+> Guidance here targets **Zep V4** (SDK packages `zep-cloud` 4.x for
+> Python, `@getzep/zep-cloud` 4.x for TypeScript, and
+> `github.com/getzep/zep-go/v4` for Go). Ignore the legacy V2 `Memory` API.
+> Zep is a paid product; some features are plan-gated — confirm availability
+> in the docs.
+> If your application uses the V3 SDKs, use the
+> [`migrating-zep-v3-to-v4`](../migrating-zep-v3-to-v4/SKILL.md) skill.
 
 ## Related skills
 
 | Skill | Use it when |
 | --- | --- |
 | [`tuning-zep-ingestion`](../tuning-zep-ingestion/SKILL.md) | You write code that ingests data into Zep, or you optimize an ingestion. Examples: a backfill, a recurring import, a `zep-ingest` pipeline, a Batch API job, an ontology or custom instructions for extraction, duplicate or untyped entities, or an evaluation of Zep on a dataset. |
+| [`migrating-zep-v3-to-v4`](../migrating-zep-v3-to-v4/SKILL.md) | You migrate an application from the Zep V3 API and SDKs to V4. |
 
 Activate the tuning-zep-ingestion skill from the same plugin before you
 write ingestion code or change an ingestion configuration. If your runtime
@@ -59,6 +63,8 @@ the [Documentation index](#documentation-index), and the
 skill gives the procedure: split the data, shape the episodes, design the
 ontology and the instructions, run a versioned ingestion, measure the graph
 shape, and change one variable per run.
+
+Activate the migrating-zep-v3-to-v4 skill before you change V3 code to V4.
 
 ## Conceptual overview
 
@@ -104,18 +110,22 @@ Graph**: anything a shared graph can do, a user graph can do too. Only some
 features are **user-graph-only** — flagged **(user graphs only)** below;
 everything else applies to every graph.
 
-- **Shared Context Graph** (`graph_id`; the SDK and API also call this a
-  *standalone graph*) — the base graph type, for context that is **not owned by
-  one application user**: a customer account, a project, a product and its
-  support knowledge, an operational domain, runbooks and policies. See
+- **Shared Context Graph** (`graph_uuid`; also called a *standalone graph*) —
+  the base graph type, for context that is **not owned by one application
+  user**: a customer account, a project, a product and its support knowledge,
+  an operational domain, runbooks and policies. See
   [Context Graph overview](https://help.getzep.com/graph-overview) and
   [Create a Context Graph](https://help.getzep.com/create-graph).
-- **User graph** (`user_id`) — a Context Graph **specialized for one
-  application user**: auto-created per user, the home of agent memory (an agent
-  remembering prior conversations and activity of that user). Adds user-only
-  features — a **user node**, a **user summary**, and **threads** — and fuses
-  all of that user's threads and user-owned business data. See
+- **User graph** (`user_uuid`; use its `graph_uuid` for graph operations) — a
+  Context Graph **specialized for one application user**: auto-created per
+  user, the home of agent memory (an agent remembering prior conversations and
+  activity of that user). Adds user-only features — a **user node**, a **user
+  summary**, and **threads** — and fuses all of that user's threads and
+  user-owned business data. See
   [Users and user graphs](https://help.getzep.com/users-and-user-graphs).
+
+Store the UUIDs that Zep returns in your application database, and do not use
+`lookup` at runtime.
 
 An integration with Zep can use **one or both** kinds of graph, and often
 several graphs of each kind. The developer integrating Zep decides which graphs
@@ -161,9 +171,9 @@ one lifecycle and differ in graph scope and retrieval path. See
 
 | Solution | Use it when | Graph scope and retrieval path |
 | --- | --- | --- |
-| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) | Agents need shared context about projects, products, operations, policies, or a business domain — knowledge not owned by one user. | One shared Context Graph (`graph_id`) per subject and access boundary. Ingest business data and documents with `graph.add` / `zep-ingest`; retrieve with `graph.search`. Guide: [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge). |
-| [Agent memory](https://help.getzep.com/agent-memory-solution) | An agent needs context from **one user's** previous conversations, activity, and changing preferences. | A user graph (`user_id`) with threads. Ingest messages with `thread.add_messages` and user-owned business data with `graph.add(user_id=...)`; retrieve with `thread.get_user_context`. Guide: [Agent memory quickstart](https://help.getzep.com/quick-start-guide). |
-| [Customer and account context](https://help.getzep.com/customer-account-context) | An agent needs a person's context **and** shared customer/account records (CRM, cases, contracts, events) for the same task. | Personal data in the user graph; shared data in an account Context Graph (`graph_id`). Retrieve from both and combine in the application. Guide: [Unify customer and account context](https://help.getzep.com/how-to-share-context-across-users-using-graphs). |
+| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) | Agents need shared context about projects, products, operations, policies, or a business domain — knowledge not owned by one user. | One shared Context Graph (`graph_uuid`) per subject and access boundary. Ingest business data and documents with `graph.episode.add` / `zep-ingest`; retrieve with `graph.get_context` or the `graph.search_*` methods. Guide: [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge). |
+| [Agent memory](https://help.getzep.com/agent-memory-solution) | An agent needs context from **one user's** previous conversations, activity, and changing preferences. | A user graph (`user_uuid`) with threads. Ingest messages with `thread.add_messages` and the thread UUID, and user-owned business data with `graph.episode.add` on `user.graph_uuid`; retrieve with `thread.get_context`. Guide: [Agent memory quickstart](https://help.getzep.com/quick-start-guide). |
+| [Customer and account context](https://help.getzep.com/customer-account-context) | An agent needs a person's context **and** shared customer/account records (CRM, cases, contracts, events) for the same task. | Personal data in the user graph; shared data in an account Context Graph (`graph_uuid`). Retrieve from both and combine in the application. Guide: [Unify customer and account context](https://help.getzep.com/how-to-share-context-across-users-using-graphs). |
 
 **Combine solutions when a task needs multiple scopes.** An agent can retrieve
 from more than one authorized graph — e.g. a support agent uses an account
@@ -217,7 +227,7 @@ retrieved context in the application.
   graph — what matters is complete retrieval when you **test end to end** for
   your use case.
 - **Dedup needs context.** Threads automatically use prior messages as
-  extraction context; `graph.add` does **not**. Episodes with pronouns or bare
+  extraction context; `graph.episode.add` does **not**. Episodes with pronouns or bare
   first names (e.g. multiple "John"s with no last name) deduplicate poorly —
   pre-process ambiguous data with stable identifiers (full names, IDs).
 - **Context Block grounding favors recall over precision.** The Context Block
@@ -232,7 +242,7 @@ retrieved context in the application.
   reading back immediately; check status when it matters via
   [Check ingestion status](https://help.getzep.com/check-data-ingestion-status).
   **Submit all episodes without polling between adds** — for
-  `thread.add_messages`, `graph.add`, batch, or `zep-ingest` alike — and
+  `thread.add_messages`, `graph.episode.add`, batch, or `zep-ingest` alike — and
   **poll only once, on the last episode**, when you need retrievability.
   Expected wait time scales with total episode count in that graph.
 
@@ -251,11 +261,12 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
 ### 1. Scope your graphs and data sources
 
 - Pick the solution first (see [Choose the solution](#choose-the-solution)),
-  then the scope: **user graphs** (`user_id`, context owned by one application
-  user) vs. **shared Context Graphs** (`graph_id`, customer/account, project,
-  product, or domain context). Create one shared graph with a **stable
-  `graph_id`, name, and description** per subject and access boundary — the
-  description helps an agent or application select the correct graph (see
+  then the scope: **user graphs** (`user_uuid`, context owned by one
+  application user) vs. **shared Context Graphs** (`graph_uuid`,
+  customer/account, project, product, or domain context). Create one shared
+  graph per subject and access boundary. Use its Zep-generated `graph_uuid`,
+  name, and description to identify it; the description helps an agent or
+  application select the correct graph (see
   [Graph directory](https://help.getzep.com/graph-directory)). Use **separate
   graphs wherever you need hard data separation** — per user, per account, per
   team, per tenant, per business unit with different access policies. Do not
@@ -268,7 +279,7 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
   history *and* ingests it into the user graph. Note the available episode/data
   types (message, text, JSON). Shared graphs have no first-class thread
   support, but can still ingest arbitrary text — e.g. Slack or email — via
-  `graph.add`, or via [`zep-ingest`](https://help.getzep.com/zep-ingest) when
+  `graph.episode.add`, or via [`zep-ingest`](https://help.getzep.com/zep-ingest) when
   those sources are already on disk (as text/JSON/episodes, not as a Zep
   thread). Group the chunks of one source (a PDF, an export, a channel) with a
   [`document_id`](https://help.getzep.com/documents) so Zep uses prior chunks
@@ -286,19 +297,19 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
 
   | What you are adding | Use |
   | --- | --- |
-  | A message in a live conversation, as your agent sends and receives it | [`thread.add_messages`](https://help.getzep.com/adding-messages) in the Zep SDK |
+  | A message in a live conversation, as your agent sends and receives it | [`thread.add_messages`](https://help.getzep.com/adding-messages) with the thread UUID |
   | Historical data on disk you are loading for the first time: documents, transcripts, email, Slack exports, or past conversations | [`zep-ingest`](https://help.getzep.com/zep-ingest) |
   | A recurring export that lands files on disk (hourly or nightly dump, ETL output) | [`zep-ingest`](https://help.getzep.com/zep-ingest) |
-  | An individual document, API response, business event, or webhook payload your application already holds in memory | [`graph.add`](https://help.getzep.com/adding-business-data) with `user_id` or `graph_id` |
+  | An individual document, API response, business event, or webhook payload your application already holds in memory | [`graph.episode.add`](https://help.getzep.com/adding-business-data) with the graph's `graph_uuid` |
 
 - **`zep-ingest`** is a Python package for building **ingestion pipelines**: it
   prepares and loads existing on-disk data into Zep in a defined order
   (canonicalize identities and timestamps, validate, submit, monitor). Prefer it
   for backfills and recurring folder/glob imports. It is a convenience layer over
-  the Zep SDK — calling `graph.add` or the
+  the Zep SDK — calling `graph.episode.add` or the
   [Batch API](https://help.getzep.com/adding-batch-data) directly remains fully
   supported. Do **not** use it for live chat turns (`thread.add_messages`) or for
-  typical in-memory / webhook payloads (`graph.add` is simpler). For loaders,
+  typical in-memory / webhook payloads (`graph.episode.add` is simpler). For loaders,
   transforms, preview, submission, and monitoring details, read
   [Create an ingestion pipeline](https://help.getzep.com/zep-ingest) — do not
   invent package APIs from memory.
@@ -314,7 +325,7 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
 - **Seed vs. stream.** Decide between backfilling initial/historical data
   (`zep-ingest`, or [batch ingestion](https://help.getzep.com/adding-batch-data)
   for large volumes) and live/streaming updates (`thread.add_messages` /
-  `graph.add`).
+  `graph.episode.add`).
 - **Multi-graph backfills — enqueue everything, then wait once.** Graphs do
   not share a processing queue; one graph finishing extraction is not a
   prerequisite for another to accept data. For a backfill into multiple graphs
@@ -364,7 +375,7 @@ ingestion, follow Steps 2, 3, and 7 of the
 ### 4. Provide retrieval to agents
 
 - **Choose the context surface:**
-  - *Default Context Block* **(user graphs only)** — `thread.get_user_context`;
+  - *Default Context Block* **(user graphs only)** — `thread.get_context`;
     returns whole-user-graph context, relevance driven by the most recent thread
     messages. Best for most conversational agents.
   - *Context templates* **(user graphs only)** — automatic relevance, your fixed
@@ -374,14 +385,16 @@ ingestion, follow Steps 2, 3, and 7 of the
     for custom blocks on any graph. See
     [Advanced construction](https://help.getzep.com/advanced-context-block-construction).
   Hub: [Retrieve](https://help.getzep.com/assembling-context).
-- **Search** with `graph.search`: `scope="auto"` (recommended entry point for
-  shared-graph/non-thread queries, spans all context types) or a specific scope
-  (edges, nodes, episodes, observations, thread_summaries) with rerankers and
-  **filters** (metadata, timestamp, entity/edge type, property). See
+- **Search** with `graph.get_context` for auto retrieval (recommended entry point
+  for shared-graph/non-thread queries, spans all context types). Use
+  `graph.search_edges`, `graph.search_nodes`, `graph.search_episodes`,
+  `graph.search_observations`, or `graph.search_thread_summaries` for a
+  specific context type. Add rerankers and **filters** (metadata, timestamp,
+  entity/edge type, property). See
   [Searching the graph](https://help.getzep.com/searching-the-graph).
 - **Decide how the agent retrieves.** Select one of two models from the task:
   - *Context Block grounding* — the application makes one retrieval call on
-    each turn (`thread.get_user_context`, a template, or advanced
+    each turn (`thread.get_context`, a template, or advanced
     construction). It optimizes for low latency and low token use, not for
     recall and precision on complex tasks. Use it for conversational grounding.
   - *Agent with Zep tools* — for complex questions and tasks, the agent drives
@@ -391,14 +404,14 @@ ingestion, follow Steps 2, 3, and 7 of the
     neighborhood, details) and domain-specific tools for retrieval recipes that
     the agent repeats. The application pins the graph, security-sensitive
     filters, the reranker, and the limits; the model controls the task
-    arguments. Do not use auto search as a step in a retrieval plan. See
+    arguments. Do not use `graph.get_context` as a step in a retrieval plan. See
     [Build an Agent with Zep](https://help.getzep.com/build-an-agent-with-zep)
     and [Build Tools for an Agent](https://help.getzep.com/build-agent-tools).
 - **Decide how many graphs** to read (one versus many, using parallel graph
   searches) — an application-layer decision. For customer/account or
-  multi-scope tasks, retrieve the user graph via `thread.get_user_context` and
-  each authorized shared graph via `graph.search`, then combine in the
-  application. See
+  multi-scope tasks, retrieve the user graph via `thread.get_context` and each
+  authorized shared graph via `graph.get_context` or an appropriate
+  `graph.search_*` method, then combine in the application. See
   [Architecture patterns](https://help.getzep.com/architecture-patterns).
 - **Place the context correctly** in the model request (data channel, not the
   privileged instruction channel — see the invariants above). Retain the
@@ -514,7 +527,7 @@ page over searching. The server exposes two mechanisms:
 | Read | To |
 |------|----|
 | [Choose a Zep solution](https://help.getzep.com/use-cases) · [Solutions](https://help.getzep.com/solutions) | Pick enterprise context graphs, agent memory, or customer and account context, and combine them |
-| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) → [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge) | Shared graph (`graph_id`) implementation path and the shared-graph quick start |
+| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) → [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge) | Shared graph (`graph_uuid`) implementation path and the shared-graph quick start |
 | [Agent memory](https://help.getzep.com/agent-memory-solution) → [Agent memory quickstart](https://help.getzep.com/quick-start-guide) | User/thread implementation path and the user-graph quick start |
 | [Customer and account context](https://help.getzep.com/customer-account-context) → [Unify customer and account context](https://help.getzep.com/how-to-share-context-across-users-using-graphs) | User graph + account graph implementation path and worked example |
 | [Install SDKs](https://help.getzep.com/install-sdks) · [Implement Zep with agents](https://help.getzep.com/implement-zep-with-agents) | Install the SDK; plugin, docs MCP, and agent-tool setup |
@@ -536,10 +549,10 @@ page over searching. The server exposes two mechanisms:
 
 | Read | To |
 |------|----|
-| [Ingest](https://help.getzep.com/adding-context) | Choose among `thread.add_messages`, `zep-ingest`, and `graph.add` |
+| [Ingest](https://help.getzep.com/adding-context) | Choose among `thread.add_messages`, `zep-ingest`, and `graph.episode.add` |
 | [Prepare data for ingestion](https://help.getzep.com/prepare-data-for-ingestion) | Best practices — **read before designing any ingestion pipeline** |
 | [Create an ingestion pipeline](https://help.getzep.com/zep-ingest) | Backfills and on-disk imports with `zep-ingest` |
-| [Adding business data](https://help.getzep.com/adding-business-data) | Individual documents/JSON/API payloads (`graph.add`) and episode metadata |
+| [Adding business data](https://help.getzep.com/adding-business-data) | Individual documents/JSON/API payloads (`graph.episode.add`) and episode metadata |
 | [Documents](https://help.getzep.com/documents) | Group the chunks of one source with `document_id` |
 | [Batch ingestion](https://help.getzep.com/adding-batch-data) | Large imports / the transport `zep-ingest` submits through |
 | [Chunking](https://help.getzep.com/chunking-large-documents) | Split large documents to fit size limits |
@@ -595,7 +608,7 @@ page over searching. The server exposes two mechanisms:
 
 | Read | To |
 |------|----|
-| [Create a Context Graph](https://help.getzep.com/create-graph) | Create and manage shared graphs (`graph_id`) |
+| [Create a Context Graph](https://help.getzep.com/create-graph) | Create and manage shared graphs (`graph_uuid`) |
 | [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge) | Stand up the basic loop (the shared-graph quick start) |
 
 **Governance**

@@ -54,7 +54,7 @@ version that you install, and record the SDK version in the manifest.
 | Structured field | A field of a record with a fixed meaning and a short value: an ID, a name, a category, a status, a date, a reference to another record. |
 | Prose field | A field of a record with free text: a message body, a document body, a transcript, a ticket description. |
 | Deterministic import | Nodes and edges that you write into the graph from the structured data of the source, through one field mapping for each structured schema (Step 1), with the node and edge import calls of the SDK (see "API surface"). No LLM is involved. |
-| Narrative episode | Text that you send to Zep for LLM extraction, through `graph.add` or the Batch API. |
+| Narrative episode | Text that you send to Zep for LLM extraction, through `graph.episode.add` or the Batch API. |
 | Lead sentence | The first sentence of a narrative episode. It names the record kind, the subject with its identifier, the author, the time, and the source. It uses the same name and identifier for the subject that the deterministic import used. It does not list the identifiers of related records. |
 | Configuration version | An integer that you increase each time you change the ontology, the instructions, or the episode preparation. One graph holds one configuration version. |
 | Manifest | A file that records, for one run, the configuration version, a hash of the configuration, a hash of the prepared data, the graph ID, the debug-mode result, the start time, and the end time. Write each hash at run time and do not compute it again later. Freeze the prepared data file of each version. |
