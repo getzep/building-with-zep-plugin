@@ -9,6 +9,14 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.10.1 — Unreleased
+
+### Changed
+
+- The `building-with-zep` skill now says to use `thread.add_messages` and
+  `graph.episode.add` only for real-time ingestion in production, and to use
+  the Batch API, directly or through `zep-ingest`, for test data and backfills.
+
 ## 0.10.0 — Unreleased
 
 ### Added
