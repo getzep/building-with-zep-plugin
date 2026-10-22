@@ -171,7 +171,7 @@ one lifecycle and differ in graph scope and retrieval path. See
 
 | Solution | Use it when | Graph scope and retrieval path |
 | --- | --- | --- |
-| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) | Agents need shared context about projects, products, operations, policies, or a business domain — knowledge not owned by one user. | One shared Context Graph (`graph_uuid`) per subject and access boundary. Ingest business data and documents with `graph.episode.add` / `zep-ingest`; retrieve with `graph.get_context` or the `graph.search_*` methods. Guide: [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge). |
+| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) | Agents need shared context about projects, products, operations, policies, or a business domain — knowledge not owned by one user. | One shared Context Graph (`graph_uuid`) per subject and access boundary. Ingest real-time business data with `graph.episode.add`, and test data and backfills with `zep-ingest` or the Batch API; retrieve with `graph.get_context` or the `graph.search_*` methods. Guide: [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge). |
 | [Agent memory](https://help.getzep.com/agent-memory-solution) | An agent needs context from **one user's** previous conversations, activity, and changing preferences. | A user graph (`user_uuid`) with threads. Ingest messages with `thread.add_messages` and the thread UUID, and user-owned business data with `graph.episode.add` on `user.graph_uuid`; retrieve with `thread.get_context`. Guide: [Agent memory quickstart](https://help.getzep.com/quick-start-guide). |
 | [Customer and account context](https://help.getzep.com/customer-account-context) | An agent needs a person's context **and** shared customer/account records (CRM, cases, contracts, events) for the same task. | Personal data in the user graph; shared data in an account Context Graph (`graph_uuid`). Retrieve from both and combine in the application. Guide: [Unify customer and account context](https://help.getzep.com/how-to-share-context-across-users-using-graphs). |
 
@@ -279,7 +279,7 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
   history *and* ingests it into the user graph. Note the available episode/data
   types (message, text, JSON). Shared graphs have no first-class thread
   support, but can still ingest arbitrary text — e.g. Slack or email — via
-  `graph.episode.add`, or via [`zep-ingest`](https://help.getzep.com/zep-ingest) when
+  `graph.episode.add` as the data arrives, or via [`zep-ingest`](https://help.getzep.com/zep-ingest) when
   those sources are already on disk (as text/JSON/episodes, not as a Zep
   thread). Group the chunks of one source (a PDF, an export, a channel) with a
   [`document_id`](https://help.getzep.com/documents) so Zep uses prior chunks
@@ -298,17 +298,25 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
   | What you are adding | Use |
   | --- | --- |
   | A message in a live conversation, as your agent sends and receives it | [`thread.add_messages`](https://help.getzep.com/adding-messages) with the thread UUID |
-  | Historical data on disk you are loading for the first time: documents, transcripts, email, Slack exports, or past conversations | [`zep-ingest`](https://help.getzep.com/zep-ingest) |
-  | A recurring export that lands files on disk (hourly or nightly dump, ETL output) | [`zep-ingest`](https://help.getzep.com/zep-ingest) |
-  | An individual document, API response, business event, or webhook payload your application already holds in memory | [`graph.episode.add`](https://help.getzep.com/adding-business-data) with the graph's `graph_uuid` |
+  | Test data, or historical data you are loading for the first time: documents, transcripts, email, Slack exports, or past conversations | [`zep-ingest`](https://help.getzep.com/zep-ingest) or the [Batch API](https://help.getzep.com/adding-batch-data) |
+  | A recurring export that lands files on disk (hourly or nightly dump, ETL output) | [`zep-ingest`](https://help.getzep.com/zep-ingest) or the [Batch API](https://help.getzep.com/adding-batch-data) |
+  | An individual document, API response, business event, or webhook payload that your application receives in real time | [`graph.episode.add`](https://help.getzep.com/adding-business-data) with the graph's `graph_uuid` |
+
+- **Use `thread.add_messages` and `graph.episode.add` only for real-time
+  ingestion in production**, for one episode or a small number of episodes at
+  a time. For test data and for backfills of any size, use the
+  [Batch API](https://help.getzep.com/adding-batch-data), directly or through
+  `zep-ingest`. The Batch API is faster. Do not write your own loop of
+  `thread.add_messages` or `graph.episode.add` calls to load bulk data.
 
 - **`zep-ingest`** is a Python package for building **ingestion pipelines**: it
   prepares and loads existing on-disk data into Zep in a defined order
   (canonicalize identities and timestamps, validate, submit, monitor). Prefer it
   for backfills and recurring folder/glob imports. It is a convenience layer over
-  the Zep SDK — calling `graph.episode.add` or the
+  the Zep SDK — calling the
   [Batch API](https://help.getzep.com/adding-batch-data) directly remains fully
-  supported. Do **not** use it for live chat turns (`thread.add_messages`) or for
+  supported. If a deployment does not serve the Batch API, `zep-ingest` falls
+  back to sequential calls for you. Do **not** use it for live chat turns (`thread.add_messages`) or for
   typical in-memory / webhook payloads (`graph.episode.add` is simpler). For loaders,
   transforms, preview, submission, and monitoring details, read
   [Create an ingestion pipeline](https://help.getzep.com/zep-ingest) — do not
@@ -322,10 +330,10 @@ in the docs (see the [index](#documentation-index)) rather than guessing.
   (such as `source`) at ingest when you need episode-metadata filtering on
   search; chunk oversized documents per
   [Chunking](https://help.getzep.com/chunking-large-documents).
-- **Seed vs. stream.** Decide between backfilling initial/historical data
-  (`zep-ingest`, or [batch ingestion](https://help.getzep.com/adding-batch-data)
-  for large volumes) and live/streaming updates (`thread.add_messages` /
-  `graph.episode.add`).
+- **Seed vs. stream.** Decide between a seed load (test data, initial or
+  historical data, and backfills of any size: `zep-ingest` or the
+  [Batch API](https://help.getzep.com/adding-batch-data)) and live/streaming
+  updates (`thread.add_messages` / `graph.episode.add`).
 - **Multi-graph backfills — enqueue everything, then wait once.** Graphs do
   not share a processing queue; one graph finishing extraction is not a
   prerequisite for another to accept data. For a backfill into multiple graphs
@@ -552,9 +560,9 @@ page over searching. The server exposes two mechanisms:
 | [Ingest](https://help.getzep.com/adding-context) | Choose among `thread.add_messages`, `zep-ingest`, and `graph.episode.add` |
 | [Prepare data for ingestion](https://help.getzep.com/prepare-data-for-ingestion) | Best practices — **read before designing any ingestion pipeline** |
 | [Create an ingestion pipeline](https://help.getzep.com/zep-ingest) | Backfills and on-disk imports with `zep-ingest` |
-| [Adding business data](https://help.getzep.com/adding-business-data) | Individual documents/JSON/API payloads (`graph.episode.add`) and episode metadata |
+| [Adding business data](https://help.getzep.com/adding-business-data) | Individual real-time documents/JSON/API payloads (`graph.episode.add`) and episode metadata |
 | [Documents](https://help.getzep.com/documents) | Group the chunks of one source with `document_id` |
-| [Batch ingestion](https://help.getzep.com/adding-batch-data) | Large imports / the transport `zep-ingest` submits through |
+| [Batch ingestion](https://help.getzep.com/adding-batch-data) | Test data, backfills, and other imports; the transport `zep-ingest` submits through |
 | [Chunking](https://help.getzep.com/chunking-large-documents) | Split large documents to fit size limits |
 | [Check ingestion status](https://help.getzep.com/check-data-ingestion-status) | Handle asynchronous processing |
 | [Webhooks](https://help.getzep.com/webhooks) | Receive pushed events (episode processed, batch completed) instead of polling |
