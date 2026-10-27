@@ -9,6 +9,12 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.10.2 — Unreleased
+
+### Changed
+
+- The `building-with-zep` and `tuning-zep-ingestion` skills now say to give each ontology type definition positive and negative examples, and to keep the types mutually exclusive.
+
 ## 0.10.1 — Unreleased
 
 ### Changed
