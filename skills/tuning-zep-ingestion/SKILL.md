@@ -261,8 +261,13 @@ Rules for the narrative episodes:
 - An entity type is a noun with a natural identity. An edge type is a verb
   between two named types. Start with the types that the questions or the use
   case need. The documentation gives the maximum number of types.
-- Give each type a short description that defines membership and gives one
-  example. Do not list values in the description (principle 4).
+- Give each type a short description that defines membership. Add one or two
+  positive examples and one negative example: a similar item that does not
+  belong, with the type that it belongs to instead. The examples show the
+  boundary of the type. Do not list all values in the description (principle 4).
+- Make the types mutually exclusive, so that each entity or fact has one
+  correct type. When two types must overlap, state in the descriptions which
+  type takes priority.
 - Declare `identity_properties` for each type that has an ID in the lead
   sentence.
 - Declare the `source_targets` of each edge type. With `strict_ontology` set

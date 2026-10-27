@@ -365,10 +365,12 @@ ingestion, follow Steps 2, 3, and 7 of the
 
 - [Custom ontology](https://help.getzep.com/customizing-graph-structure) —
   your entity/edge types. Model entity types as **nouns** and edge types as
-  **verbs/relationships**, and start with a few generic types rather than
-  modeling everything up front (custom attributes are advanced and often
-  unnecessary). Recommended for most production use cases: sharpens extraction
-  and enables type-filtered retrieval of domain-specific objects.
+  **verbs/relationships**, keep the types mutually exclusive, give each type
+  definition positive and negative examples, and start with a few generic
+  types rather than modeling everything up front (custom attributes are
+  advanced and often unnecessary). Recommended for most production use cases:
+  sharpens extraction and enables type-filtered retrieval of domain-specific
+  objects.
 - [Custom instructions](https://help.getzep.com/custom-instructions) —
   describe your domain (terminology, concepts) so Zep interprets data better
   on ingest. Not for defining types — that is the ontology's job.
