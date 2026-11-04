@@ -9,6 +9,20 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.11.0 — Unreleased
+
+### Added
+
+- The core skill now explains when to use Agent Skills, how verified task runs
+  become retrievable procedures, and how to record Skill use and outcomes.
+- The documentation index now includes the Agent Skills guides.
+
+### Changed
+
+- The activation description now includes Agent Skills integrations.
+- The retrieved-context safety rule now identifies graph context separately
+  from Skill procedures. Skill admission does not authorize application actions.
+
 ## 0.10.2 — Unreleased
 
 ### Changed

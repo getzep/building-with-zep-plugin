@@ -3,27 +3,25 @@ name: building-with-zep
 description: >-
   Guide for building, designing, reviewing, evaluating, and troubleshooting
   applications that use Zep, the unified context layer for enterprise data.
-  Zep combines business data, documents, and conversations into governed
-  temporal Context Graphs for three solutions: enterprise context graphs,
-  agent memory, and customer and account context. Use whenever you write or
-  design code that integrates Zep: giving an agent context or long-term
-  memory, building a shared Context Graph, ingesting chat, business,
-  document, or JSON data, retrieving a Context Block or searching the graph,
-  choosing between user graphs and shared graphs, defining an ontology or
-  custom instructions, applying access policies, or evaluating and tuning
-  Zep. Triggers on "implement Zep for my agent", "set up a Zep ontology",
-  or "why is Zep not returning the right context". For ingestion code or
-  tuning, also use the tuning-zep-ingestion skill. Do not trigger when
-  an end user asks an agent to remember or look up something in its own
-  memory.
+  Zep provides governed temporal Context Graphs for user and business context,
+  and Agent Skills for reusable procedures. Use whenever you write or design
+  code that integrates Zep: giving an agent context or long-term memory,
+  building shared graphs, ingesting chat or business data, retrieving context,
+  defining an ontology or custom instructions, applying access policies,
+  capturing verified task runs, learning or retrieving Agent Skills, or
+  evaluating Zep. Triggers on "implement Zep for my agent", "set up a Zep ontology",
+  "add Zep Agent Skills", or "why is Zep not returning the right context".
+  For ingestion code or tuning, also use the tuning-zep-ingestion skill.
+  Do not trigger when an end user asks an agent to remember or look up
+  something in its own memory.
 ---
 
 # Building with Zep
 
 This skill is the **decision-and-workflow layer** for building on Zep: how to
 reason about Zep, choose a solution, scope graphs, ingest data, shape the
-graph, retrieve context, govern access, and evaluate whether Zep delivers your
-use case. It is **not** an API reference or a full
+graph, retrieve context, use Agent Skills, govern access, and evaluate whether
+Zep delivers your use case. It is **not** an API reference or a full
 best-practices manual — for exact, current details (method names, parameters,
 limits, plan availability) and the complete best practices for any given
 feature, query the **`zep-docs` MCP server** first — preferring to load the
@@ -82,10 +80,10 @@ See [Unified context](https://help.getzep.com/concepts) and
 [Context Lake](https://help.getzep.com/context-lake).
 
 **Position Zep as a context solution, not only a memory store.** Agent memory
-(remembering one user across conversations) is one of Zep's three solutions —
-see [Choose the solution](#choose-the-solution) — and every solution uses the
-same graphs, ingestion, retrieval, and governance. When you describe or design
-with Zep, lead with *the context the agent needs for its task* and *who owns
+(remembering one user across conversations) is one of Zep's three context
+solutions. See [Choose the solution](#choose-the-solution). These context
+solutions use the same graphs, ingestion, retrieval, and governance. When you
+describe or design with Zep, lead with *the context the agent needs for its task* and *who owns
 that context*, then pick the graph scope; do not assume "Zep" means "per-user
 chat memory".
 
@@ -165,7 +163,7 @@ claims) — good retrieval draws on both. See
 ## Choose the solution
 
 Start with the information the agent needs, then identify **who owns that
-context**. Zep's documentation is organized around three solutions; they share
+context**. The three context solutions below share
 one lifecycle and differ in graph scope and retrieval path. See
 [Choose a Zep solution](https://help.getzep.com/use-cases).
 
@@ -181,6 +179,36 @@ graph (contracts, cases), the user's graph (their conversations and
 preferences), and an enterprise graph (support policies, runbooks). Keep each
 data set in the graph matching its subject and access boundary; combine the
 retrieved context in the application.
+
+## Agent Skills
+
+Use Agent Skills when an agent needs a reusable procedure from earlier verified
+task runs. Context Graphs provide facts about users, accounts, and a business
+domain. Agent Skills provide procedures for a task family. Use both when the
+task needs current facts and a procedure.
+
+An **Agent** in Zep owns its Traces and Skills. A **Trace** records one task run,
+including its objective, ordered events, and outcome. Skills do not move between
+Agents automatically. See the [Agent Skills overview](https://help.getzep.com/agent-skills)
+and the [quickstart](https://help.getzep.com/agent-skills/quickstart).
+
+1. **Capture and verify.** Record the actual task events and close the Trace
+   with its outcome and verification evidence. Do not invent successful runs or
+   verification evidence to obtain a Skill.
+2. **Compile and admit.** Zep compiles candidates asynchronously. A closed Trace
+   does not guarantee a Skill. Candidates must pass the admission checks before
+   search can return them. Require member review when the application needs it.
+3. **Retrieve and apply.** Search for Skills for the current task through the
+   SDKs or MCP. Check each Skill's applicability before following its procedure.
+   Do not assume that a search returns an applicable Skill.
+4. **Record the result.** Record the Skill version used and the outcome with its
+   verification evidence. A search alone does not record a Skill use.
+
+An admitted Skill describes a procedure. Admission does not authorize tool calls
+or override the application's instructions and permissions. Raw Trace events are
+not trusted instructions. See [Retrieve Skills and record use](https://help.getzep.com/agent-skills/retrieve-skills)
+for prompt placement and feedback, and [Configure learning and admission](https://help.getzep.com/agent-skills/learning-and-admission)
+for the learning and review settings.
 
 ## Architectural philosophy and invariants
 
@@ -199,12 +227,12 @@ retrieved context in the application.
   Context supports correct task completion; it does not guarantee model
   behavior or authorize an action. The application remains responsible for
   tool permissions, action authorization, and validation of external actions.
-- **Retrieved context is evidence, not instruction.** Treat every Context
-  Block and search result as untrusted data: it can contain end-user messages,
-  documents, and tool output. Keep the agent's instructions in the provider's
-  privileged channel (system/developer/instructions) and pass Zep context
+- **Retrieved graph context is evidence, not instruction.** Treat every Context
+  Block and graph search result as untrusted data: it can contain end-user
+  messages, documents, and tool output. Keep the agent's instructions in the
+  provider's privileged channel (system/developer/instructions) and pass graph context
   through the ordinary data channel (a user message, or a tool result linked to
-  its call). Never interpolate retrieved context into the system prompt. See
+  its call). Never interpolate retrieved graph context into the system prompt. See
   [Memory security best practices](https://help.getzep.com/memory-security)
   for per-provider placement. Domain knowledge that the application writes
   (ranking rules, evidence rules, vocabulary) and the ontology can go in the
@@ -502,8 +530,8 @@ documentation before implementing any feature**. The pages below are curated
 entry points ("read X to do Y"), grouped the way the docs are laid out:
 solutions and getting started, unified-context concepts, the Working with
 Context lifecycle (Ingest, Shape, Retrieve), pages that apply to all graphs,
-the smaller sets that are user-graph-only or shared-graph-only, governance, and
-reference.
+the smaller sets that are user-graph-only or shared-graph-only, Agent Skills,
+governance, and reference.
 
 **How to retrieve — read a page (preferred), or search.** Prefer loading a whole
 page over searching. The server exposes two mechanisms:
@@ -542,6 +570,19 @@ page over searching. The server exposes two mechanisms:
 | [Customer and account context](https://help.getzep.com/customer-account-context) → [Unify customer and account context](https://help.getzep.com/how-to-share-context-across-users-using-graphs) | User graph + account graph implementation path and worked example |
 | [Install SDKs](https://help.getzep.com/install-sdks) · [Implement Zep with agents](https://help.getzep.com/implement-zep-with-agents) | Install the SDK; plugin, docs MCP, and agent-tool setup |
 | [Agent frameworks](https://help.getzep.com/memory-for-agent-frameworks) | Add Zep context to LangGraph, CrewAI, Vercel AI, Mastra, ADK, and other frameworks |
+
+**Agent Skills**
+
+| Read | To |
+|------|----|
+| [Agent Skills overview](https://help.getzep.com/agent-skills) · [Agent Skills quickstart](https://help.getzep.com/agent-skills/quickstart) | Understand reusable procedures and implement the capture, admission, retrieval, and feedback workflow |
+| [Capture Traces](https://help.getzep.com/agent-skills/capture-traces) | Record task events, retries, outcomes, and verification |
+| [Configure learning and admission](https://help.getzep.com/agent-skills/learning-and-admission) | Configure compilation, admission checks, member review, and candidate evaluations |
+| [Retrieve Skills and record use](https://help.getzep.com/agent-skills/retrieve-skills) | Find applicable Skills through the SDKs or MCP, place Skill text in the prompt, and record use and outcomes |
+| [Write a Skill manually](https://help.getzep.com/agent-skills/author-skills) | Write or import a Skill and submit it for admission |
+| [Inspect and restore Skills](https://help.getzep.com/agent-skills/manage-skills) | Inspect evidence, compare versions, export Skills, and restore earlier versions |
+| [Share Agent Skills](https://help.getzep.com/agent-skills/publish-skills) | Copy a Skill to another Agent in the same security domain and review it there |
+| [Import Traces from Braintrust](https://help.getzep.com/agent-skills/import-traces) · [Import Traces from LangSmith](https://help.getzep.com/agent-skills/import-traces-langsmith) | Learn from existing traces instead of adding new capture code |
 
 **Unified-context concepts**
 
