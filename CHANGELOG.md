@@ -9,6 +9,31 @@ Claude Code also uses it for update detection. Bump it with
 `python3 scripts/plugin_manifests.py set <version>` from the repo root; see
 [Releasing](README.md#releasing).
 
+## 0.12.0 — Unreleased
+
+### Added
+
+- The core skill now explains Smart Query (`graph.query`) as a third retrieval
+  model. The guidance tells when to use one multi-hop query instead of the
+  Context Block or an agent loop, how to select the `fast` or `deep` mode, and
+  how to use `answer_status` when you request a generated answer.
+- The governance guidance now explains content policies and context
+  retention.
+- The ontology guidance now names entity and edge type hierarchies.
+- The evaluation guidance now names the graph visualizer assistant and
+  compares a multi-hop result with Smart Query.
+- The documentation index now includes Querying a Graph, Hyperedges, the
+  graph visualizer assistant, the Agent Skills examples, content policies,
+  context retention, SCIM provisioning, Zep Support access, Context MCP
+  authentication, the guide to use Zep in Claude, ChatGPT, and other clients,
+  and the Mem0 migration guide.
+
+### Changed
+
+- The activation description now includes multi-hop Smart Query retrieval.
+- The shared-graph row of the solution table now names Smart Query as a
+  retrieval option.
+
 ## 0.11.0 — Unreleased
 
 ### Added
