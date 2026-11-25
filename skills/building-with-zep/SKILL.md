@@ -7,6 +7,7 @@ description: >-
   and Agent Skills for reusable procedures. Use whenever you write or design
   code that integrates Zep: giving an agent context or long-term memory,
   building shared graphs, ingesting chat or business data, retrieving context,
+  running multi-hop Smart Query retrieval,
   defining an ontology or custom instructions, applying access policies,
   capturing verified task runs, learning or retrieving Agent Skills, or
   evaluating Zep. Triggers on "implement Zep for my agent", "set up a Zep ontology",
@@ -169,7 +170,7 @@ one lifecycle and differ in graph scope and retrieval path. See
 
 | Solution | Use it when | Graph scope and retrieval path |
 | --- | --- | --- |
-| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) | Agents need shared context about projects, products, operations, policies, or a business domain — knowledge not owned by one user. | One shared Context Graph (`graph_uuid`) per subject and access boundary. Ingest real-time business data with `graph.episode.add`, and test data and backfills with `zep-ingest` or the Batch API; retrieve with `graph.get_context` or the `graph.search_*` methods. Guide: [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge). |
+| [Enterprise context graphs](https://help.getzep.com/enterprise-context-graphs) | Agents need shared context about projects, products, operations, policies, or a business domain — knowledge not owned by one user. | One shared Context Graph (`graph_uuid`) per subject and access boundary. Ingest real-time business data with `graph.episode.add`, and test data and backfills with `zep-ingest` or the Batch API; retrieve with `graph.get_context`, the `graph.search_*` methods, or Smart Query (`graph.query`) for multi-hop questions. Guide: [Build project, product, and domain context](https://help.getzep.com/give-your-agent-domain-knowledge). |
 | [Agent memory](https://help.getzep.com/agent-memory-solution) | An agent needs context from **one user's** previous conversations, activity, and changing preferences. | A user graph (`user_uuid`) with threads. Ingest messages with `thread.add_messages` and the thread UUID, and user-owned business data with `graph.episode.add` on `user.graph_uuid`; retrieve with `thread.get_context`. Guide: [Agent memory quickstart](https://help.getzep.com/quick-start-guide). |
 | [Customer and account context](https://help.getzep.com/customer-account-context) | An agent needs a person's context **and** shared customer/account records (CRM, cases, contracts, events) for the same task. | Personal data in the user graph; shared data in an account Context Graph (`graph_uuid`). Retrieve from both and combine in the application. Guide: [Unify customer and account context](https://help.getzep.com/how-to-share-context-across-users-using-graphs). |
 
@@ -393,10 +394,13 @@ ingestion, follow Steps 2, 3, and 7 of the
 
 - [Custom ontology](https://help.getzep.com/customizing-graph-structure) —
   your entity/edge types. Model entity types as **nouns** and edge types as
-  **verbs/relationships**, keep the types mutually exclusive, give each type
+  **verbs/relationships**, keep the types at the same level mutually
+  exclusive, give each type
   definition positive and negative examples, and start with a few generic
   types rather than modeling everything up front (custom attributes are
-  advanced and often unnecessary). Recommended for most production use cases:
+  advanced and often unnecessary). When the types form a taxonomy, group
+  them into types and subtypes with an entity type hierarchy or an edge
+  type hierarchy. Recommended for most production use cases:
   sharpens extraction and enables type-filtered retrieval of domain-specific
   objects.
 - [Custom instructions](https://help.getzep.com/custom-instructions) —
@@ -430,11 +434,28 @@ ingestion, follow Steps 2, 3, and 7 of the
   specific context type. Add rerankers and **filters** (metadata, timestamp,
   entity/edge type, property). See
   [Searching the graph](https://help.getzep.com/searching-the-graph).
-- **Decide how the agent retrieves.** Select one of two models from the task:
+- **Decide how the agent retrieves.** Select one of three models from the task:
   - *Context Block grounding* — the application makes one retrieval call on
     each turn (`thread.get_context`, a template, or advanced
     construction). It optimizes for low latency and low token use, not for
     recall and precision on complex tasks. Use it for conversational grounding.
+  - *Smart Query* — the application makes one `graph.query` call, and Zep
+    plans the retrieval. Zep runs several rounds of search and graph
+    traversal on one graph. Each round uses the records from the previous
+    round to plan the next round. Use Smart Query for a multi-hop question,
+    where the next search depends on a record that an earlier search
+    returned, when you do not build your own agent loop. The `fast` mode
+    optimizes for latency. The `deep` mode runs more retrieval steps for
+    questions that need a list or a count. The response contains the
+    retrieved records. The response has a record limit, so examine
+    `truncated` before you count the records. A response that is not
+    truncated can still miss matches, so do not use a Smart Query count as
+    an exact count. When you request a
+    generated answer, branch on `answer_status`, not on the answer text. Some
+    BYOM and BYOC configurations support only the `deep` mode. The operation
+    is experimental, so get the request and response fields from
+    [Querying a Graph](https://help.getzep.com/querying-a-graph) through
+    `zep-docs` before you write the call.
   - *Agent with Zep tools* — for complex questions and tasks, the agent drives
     retrieval. Learn the graph once per graph, inject domain knowledge, plan,
     run several targeted tool calls (deduplicate by UUID, stop at a budget),
@@ -475,6 +496,22 @@ separates two problems (hub: [Governance](https://help.getzep.com/governance)):
   policies evaluate the **episode metadata attached at ingestion** (see
   [Episode metadata projection](https://help.getzep.com/episode-metadata-projection)),
   so decide metadata like `source` at ingest time with governance in mind.
+- **What derived information can enter a graph** —
+  [content policies](https://help.getzep.com/content-policies) define
+  categories of information, such as health conditions, that Zep must not add
+  to a graph. A language model evaluates each fact, entity, and summary that
+  ingestion derives, and Zep drops each item that the policy excludes or that
+  it cannot classify with certainty. The episode text stays as you sent it. Zep copies the
+  policy into a graph only when it creates the graph, so write and test the
+  project policy before you create production users and graphs. Do not use a
+  content policy as your only control for regulated data. Get the plan and
+  deployment availability from the docs.
+- **How long context stays** — Zep keeps context until a caller deletes it,
+  the account or project is deleted, or a
+  [retention policy](https://help.getzep.com/context-retention#retention-policies)
+  deletes the idle context. Read
+  [Context retention](https://help.getzep.com/context-retention) before you
+  design deletion or promise a retention period.
 - **Traceability and visibility** —
   [source traceability](https://help.getzep.com/source-traceability) to trace
   facts to source episodes, [Audit Logs](https://help.getzep.com/audit-logging)
@@ -499,15 +536,19 @@ action permissions.
   - Completeness **low** → accuracy will be low too. Localize the failure: is it
     ingestion or retrieval? First check whether the needed information is in the
     graph **at all** — [read/export the graph](https://help.getzep.com/reading-data-from-the-graph)
-    (edges, entities, observations) and inspect the **episodes** (the raw data
-    that was sent).
+    (edges, entities, observations) or ask the
+    [graph visualizer assistant](https://help.getzep.com/graph-visualizer-assistant)
+    in the dashboard, and inspect the **episodes** (the raw data that was
+    sent).
     - Not in the episodes → the data was **never sent** to Zep; fix what your
       application ingests. Not a Zep problem.
     - In the episodes but not in derived artifacts → tune **ingestion** (custom
       instructions, ontology, pre-processing the data) with the
       [`tuning-zep-ingestion`](../tuning-zep-ingestion/SKILL.md) skill.
     - In the derived artifacts but not in the retrieved context → tune
-      **retrieval** (search scope, rerankers, filters, context assembly).
+      **retrieval** (search scope, rerankers, filters, context assembly). For
+      a multi-hop question, compare the result with Smart Query
+      (`graph.query`) in the `deep` mode.
 - **For an agent with Zep tools,** grade context completeness on all tool
   output of the run, not on one search, and grade the final answer separately.
   Add tools, graph orientation, domain knowledge, and the plan one at a time,
@@ -570,6 +611,7 @@ page over searching. The server exposes two mechanisms:
 | [Customer and account context](https://help.getzep.com/customer-account-context) → [Unify customer and account context](https://help.getzep.com/how-to-share-context-across-users-using-graphs) | User graph + account graph implementation path and worked example |
 | [Install SDKs](https://help.getzep.com/install-sdks) · [Implement Zep with agents](https://help.getzep.com/implement-zep-with-agents) | Install the SDK; plugin, docs MCP, and agent-tool setup |
 | [Agent frameworks](https://help.getzep.com/memory-for-agent-frameworks) | Add Zep context to LangGraph, CrewAI, Vercel AI, Mastra, ADK, and other frameworks |
+| [Migrate from Mem0](https://help.getzep.com/mem0-to-zep) | Move an application from Mem0 to Zep |
 
 **Agent Skills**
 
@@ -579,6 +621,7 @@ page over searching. The server exposes two mechanisms:
 | [Capture Traces](https://help.getzep.com/agent-skills/capture-traces) | Record task events, retries, outcomes, and verification |
 | [Configure learning and admission](https://help.getzep.com/agent-skills/learning-and-admission) | Configure compilation, admission checks, member review, and candidate evaluations |
 | [Retrieve Skills and record use](https://help.getzep.com/agent-skills/retrieve-skills) | Find applicable Skills through the SDKs or MCP, place Skill text in the prompt, and record use and outcomes |
+| [Agent Skills examples](https://help.getzep.com/agent-skills/examples) | Run complete examples of the Trace capture, Skill compilation, and Skill use loop in PydanticAI, LangGraph, Google ADK, Claude Agent SDK, Mastra, OpenAI Codex SDK, and Eve |
 | [Write a Skill manually](https://help.getzep.com/agent-skills/author-skills) | Write or import a Skill and submit it for admission |
 | [Inspect and restore Skills](https://help.getzep.com/agent-skills/manage-skills) | Inspect evidence, compare versions, export Skills, and restore earlier versions |
 | [Share Agent Skills](https://help.getzep.com/agent-skills/publish-skills) | Copy a Skill to another Agent in the same security domain and review it there |
@@ -626,9 +669,11 @@ page over searching. The server exposes two mechanisms:
 | [Retrieve](https://help.getzep.com/assembling-context) | Compare the Context Block, context templates, and advanced construction |
 | [Build an Agent with Zep](https://help.getzep.com/build-an-agent-with-zep) · [Build Tools for an Agent](https://help.getzep.com/build-agent-tools) | Build an agent that plans its retrieval and uses several Zep tools; design functional and domain-specific tools |
 | [Searching the graph](https://help.getzep.com/searching-the-graph) | Scoped search, filters, rerankers |
+| [Querying a Graph](https://help.getzep.com/querying-a-graph) | Retrieve multi-hop context from one graph in one call with Smart Query (`graph.query`), with an optional answer that cites the graph items |
 | [Advanced construction](https://help.getzep.com/advanced-context-block-construction) | Build custom context blocks (the only context surface for shared graphs) |
 | [Most relevant facts for a query](https://help.getzep.com/how-to-get-most-relevant-facts-for-an-arbitrary-query) · [Facts for a specific node](https://help.getzep.com/how-to-find-facts-relevant-to-a-specific-node) | Cookbook recipes for fact-level retrieval |
-| [Context MCP server](https://help.getzep.com/context-mcp-server) | Let your users' off-the-shelf agents (Claude, ChatGPT, other MCP clients) work with the same graphs as the agents you build, secured by your identity provider |
+| [Context MCP server](https://help.getzep.com/context-mcp-server) · [Context MCP authentication](https://help.getzep.com/context-mcp-server/authentication) | Let your users' off-the-shelf agents (Claude, ChatGPT, other MCP clients) work with the same graphs as the agents you build, secured by your identity provider |
+| [Use Zep in Claude, ChatGPT, Cursor, and other clients](https://help.getzep.com/use-zep-in-claude-chatgpt) | Roll out the Zep Context plugin (the Context MCP Server and the Zep Context skill) to the people in your organization |
 | [Graph directory](https://help.getzep.com/graph-directory) | Discover shared graphs by name and description before searching them |
 | [Memory security best practices](https://help.getzep.com/memory-security) | Place retrieved context safely per provider; prevent memory poisoning |
 | [Performance best practices](https://help.getzep.com/performance) | Reduce latency and optimize production performance (SDK client reuse, cache warming, concise search) |
@@ -637,10 +682,11 @@ page over searching. The server exposes two mechanisms:
 
 | Read | To |
 |------|----|
-| [Manually updating the graph](https://help.getzep.com/adding-fact-triplets) | Add nodes/fact triplets and update existing edges, nodes, and facts by UUID |
+| [Manually updating the graph](https://help.getzep.com/adding-fact-triplets) · [Hyperedges](https://help.getzep.com/hyperedges) | Add nodes/fact triplets, update existing edges, nodes, and facts by UUID, and store one fact that relates three or more nodes |
 | [Reading data](https://help.getzep.com/reading-data-from-the-graph) · [Deleting data](https://help.getzep.com/deleting-data-from-the-graph) | Inspect or remove graph data |
 | [Cloning graphs](https://help.getzep.com/cloning-graphs) | Copy a graph (e.g. for testing) |
-| [Debug mode](https://help.getzep.com/debug-mode) | Capture per-episode ingestion logs when diagnosing extraction |
+| [Debug mode](https://help.getzep.com/debug-mode) | Capture per-episode ingestion logs and Ingestion Traces when diagnosing extraction |
+| [Graph visualizer assistant](https://help.getzep.com/graph-visualizer-assistant) | Ask read-only questions about a graph in the dashboard and see each retrieval step |
 | [Working with rate limits](https://help.getzep.com/rate-limits) | Handle API rate limits and backpressure in ingestion and retrieval code |
 | [Evaluate Zep for your use case](https://help.getzep.com/evaluate-zep-for-your-use-case) | Benchmark completeness vs. accuracy |
 
@@ -667,11 +713,14 @@ page over searching. The server exposes two mechanisms:
 | Read | To |
 |------|----|
 | [Governance](https://help.getzep.com/governance) | Hub: RBAC for humans, ABAC policies for agents and callers, traceability, logs |
-| [Managing team access (RBAC)](https://help.getzep.com/role-based-access-control) · [Enterprise SSO](https://help.getzep.com/enterprise-sso) | Dashboard permissions for teammates and how they sign in |
+| [Managing team access (RBAC)](https://help.getzep.com/role-based-access-control) · [Enterprise SSO](https://help.getzep.com/enterprise-sso) · [SCIM provisioning](https://help.getzep.com/scim-provisioning) | Dashboard permissions for teammates, how they sign in, and how an identity provider provisions them |
 | [Policy-based access control](https://help.getzep.com/policy-based-access-control) · [Agent access](https://help.getzep.com/attribute-based-access-control) · [UserGroup access](https://help.getzep.com/usergroup-access) | Attach ABAC policy sets to API keys (agents) and UserGroups (Context MCP users) for least-privilege access to context |
+| [Content policies](https://help.getzep.com/content-policies) | Keep categories of derived information out of a graph, and audit what Zep dropped |
+| [Context retention](https://help.getzep.com/context-retention) | What Zep keeps, what deletion removes, and retention policies that delete idle context |
 | [Episode metadata projection](https://help.getzep.com/episode-metadata-projection) | Understand what source-based policies and metadata filters evaluate |
 | [Source traceability](https://help.getzep.com/source-traceability) | Trace facts to source episodes and retain references for audit |
 | [Audit logging](https://help.getzep.com/audit-logging) · [API logging](https://help.getzep.com/api-logging) | Review dashboard activity and API request activity |
+| [Zep Support access](https://help.getzep.com/support-access) | Give Zep Support time-limited read-only access to your account |
 | [Security & compliance](https://help.getzep.com/security-compliance) · [HIPAA compliance](https://help.getzep.com/hipaa-compliance) | SOC 2 Type II, HIPAA BAAs, [BYOK](https://help.getzep.com/bring-your-own-key), [BYOM](https://help.getzep.com/bring-your-own-llm), and Cloud/BYOC deployment models |
 
 **Reference**
